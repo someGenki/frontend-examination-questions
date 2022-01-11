@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+      .input {
+          font-size: 14px;
+          line-height: 1.5;
+          border-radius: 4px;
+          width: 200px;
+          margin-left: 5px;
+          border: 1px solid #efeff4;
+          padding: 5px;
+          outline: 0;
+          resize: none;
+      }
+
+      .content {
+          margin-top: 10px;
+      }
+
+      .content em {
+          color: #f56c6c;
+      }
+  </style>
+</head>
+<body>
+<input class="input" type="text" placeholder="请输入需要匹配的关键词"/>
+<div class="content">
+  到头来aaaA，<br/>
+  我们记住的，<br/>
+  不是敌人的攻击，<br/>
+  而是朋友的沉默。
+</div>
+</body>
+<script>
+  const Highlight = {
+    init(param) {
+      const that = this;
+      const input = param.input;
+      const output = param.output;
+      if (!input || !output) return;
+      // TODO: 获取output的html内容
+      const content = output.innerHTML;
+      // str.split('\n').filter(i=>i)
+      // TODO: 请为input绑定input事件，回调函数为_input
+      function _input() {
+        // TODO: 请获取input的值，并去除左右的空白字符
+        const word = input.value.trim();
+        output.innerHTML=that.mark(content, word)
+        // TODO: 请将output的html替换为result
+      }
+      input.addEventListener('input', _input)
+    },
+    mark(content, word) {
+      word = (word || '').trim();
+      if (!word) return content;
+      let reg=new RegExp(word,'gim')
+      // TODO: 请将content中和word匹配的全部内容用em标签包裹，比如： <em>word</em>，注意不要处理content中的标签字符
+      return content.replace(reg,function (a) {
+         return `<em>${a}</em>`
+      })
+    }
+  }
+  Highlight.init({
+    // TODO: 请获取class=input的节点
+    input: document.getElementsByClassName('input')[0],
+    // TODO: 请获取class=content的节点
+    output: document.getElementsByClassName('content')[0]
+  });
+</script>
+</html>

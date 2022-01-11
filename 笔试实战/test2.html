@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+      table {
+          border-collapse: collapse;
+          width: 360px;
+          table-layout: fixed;
+      }
+
+      thead {
+          background: #f5f7fa;
+      }
+
+      thead th {
+          font-weight: strong;
+          cursor: pointer;
+      }
+
+      thead th:hover {
+          color: #25bb9b;
+      }
+
+      td, th {
+          border: 1px solid #e1e1e1;
+          padding: 0;
+          text-align: center;
+          padding: 10px 0;
+      }
+  </style>
+
+</head>
+<body>
+<div class="container">
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>QQ号码</th>
+      <th>score</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>1</td>
+      <td>60006</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>20002</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>30003</td>
+      <td>66</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>10001</td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>50005</td>
+      <td>44</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>40004</td>
+      <td>55</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<script>
+  const order = {
+    init(param) {
+      const that = this;
+      console.log(param)
+      const table = param.el;
+      if (!table) return;
+      const tbody = table.querySelector("tbody");
+      const ths = [...table.querySelectorAll("th")];
+      const trs = [...tbody.querySelectorAll("tr")];
+      const list = this.getBodyList(trs);
+      ths.forEach((th, index) => {
+        const fn = () => {
+          const isAsc1 = that.isAsc(list, index);
+          const li = list.sort((a, b) => !isAsc1 ?
+            (a.value[index] - b.value[index]) :
+            (b.value[index] - a.value[index])
+          );
+          trs.forEach((tr, index) => {
+            console.log(tr)
+            for (let i = 0; i < tr.children.length; i++) {
+              tr.children[i].innerText = li[index].value[i]
+            }
+          })
+        }
+        th.addEventListener('click', fn)
+      })
+    },
+    getBodyList(trs) {
+      return trs.map(tr => {
+        const tds = [...tr.querySelectorAll('td')];
+        const val = tds.map(td => Number(td.innerText));
+        return {tr: tr, value: val};
+      });
+    },
+    isAsc(list, index) {
+      let flag = true;
+      for (let i = 1; i < list.length; i++) {
+        if (list[i - 1].value[index] > list[i].value[index])
+          flag = false
+      }
+      return flag
+    }
+  };
+
+  order.init({
+    el: document.getElementsByClassName('container')[0].getElementsByTagName("table")[0]
+  });
+</script>
+</body>
+</html>

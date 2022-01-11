@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>test</title>
+  <style>
+      .color {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+      }
+
+      .color input {
+          font-size: 14px;
+          line-height: 1.5;
+          border-radius: 4px;
+          width: 120px;
+          margin-left: 5px;
+          border: 1px solid #efeff4;
+          padding: 5px;
+          outline: 0;
+          resize: none;
+      }
+
+      .divider {
+          color: #25bb9b;
+          margin: 0 10px;
+      }
+  </style>
+</head>
+<body>
+<div class="color">
+  <span>RGB</span>
+  <input class="rgb" type="text" placeholder="请输入RGB值"/>
+  <span class="divider">&lt;=&gt;</span>
+  <span>HEX</span>
+  <input class="hex" type="text" placeholder="请输入HEX值"/>
+</div>
+</body>
+<script>
+  const rgb2hex = {
+    init(param) {
+      const that = this;
+      const rgb = param.rgb;
+      const hex = param.hex;
+      if (!rgb || !hex) return;
+      rgb.onblur = _blurRgb
+      hex.onblur = _blurHex;
+
+      function _blurRgb() {
+        const value = that.rgb2hex(rgb.value);
+        hex.value = value;
+      }
+
+      function _blurHex() {
+        const value = that.hex2rgb(hex.value);
+        rgb.value = value
+      }
+    },
+    rgb2hex(value) {
+      value = (value || '').trim();
+      const arr = [], bool = true
+      // 不用正则表达式的校验
+      value.split(',').forEach(str => {
+        let s = parseInt(str);
+        if (isNaN(s) || s > 255 || s < 0) bool = false
+        else arr.push(s)
+      })
+      if (arr.length !== 3 || bool === false) return '';
+      let str = "#"
+      // 不足一个F则要补零
+      arr.forEach(num => {
+        if (num < 16) str += '0'
+        str += num.toString(16).toUpperCase();
+      })
+      return str;
+    },
+    hex2rgb(value) {
+      value = (value || '').trim();
+      // 转换成大写
+      value = value.toUpperCase();
+      const result = []
+      // 数据校验
+      if (value[0] !== '#' || value.length !== 7) return ''
+      for (let i = 1; i < value.length; i += 2) {
+        const t = value[i] + value[i + 1]
+        const num = parseInt(t, 16);
+        if (isNaN(num) || num > 255 || num < 0)
+          return ''; // 又一个不规范则返回''
+        else result.push(num)
+      }
+      return result.join(',');
+    }
+  };
+  rgb2hex.init({
+    rgb: document.getElementsByClassName('rgb')[0],
+    hex: document.getElementsByClassName('hex')[0]
+  });
+</script>
+</html>
