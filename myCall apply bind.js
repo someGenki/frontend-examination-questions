@@ -13,3 +13,5 @@ Function.prototype.myBind = function (ctx, ...args) {
   bind.prototype = this.prototype
   return bind
 }
+
+// TODO
