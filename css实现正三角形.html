@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>css实现正三角形/等边三角形</title>
+  <style>
+    .box1 {
+      width: 0;
+      border: 100px solid transparent;
+      border-top: 0;
+      border-bottom: 100px solid palegreen;
+    }
+
+    .box2 {
+      /* 等腰三角形的边长 */
+      ---triangle-side: 100px;
+      width: 0;
+      /* 两边的border高度50px让三角形边长为100px，且等边三角形高是边长的√3/2倍*/
+      border-left: var(---triangle-side) solid transparent;
+      border-right: var(---triangle-side) solid transparent;
+      border-bottom: calc(var(---triangle-side) * 1.732) solid palegreen;
+    }
+
+  </style>
+</head>
+<body>
+<p>等腰三角形👇</p>
+<div class="box1"></div>
+<p>等边三角形👇</p>
+<div class="box2"></div>
+</body>
+</html>
