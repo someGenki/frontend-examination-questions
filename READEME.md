@@ -48,3 +48,21 @@ console.log(obj.arr === cloneObj.arr)   // false
 
 ````
 
+对于一种题目，有多种解法，也需要用分割线分隔
+
+````js
+// in flatDataToTree-一维数组转树形结构.js
+// ==递归写法==
+function arrToTree(...){
+    ... // 递归写法的代码
+}
+    
+// ==Map+两次循环==
+function flatDataToTree(...){
+    ... // Map+两次循环的代码
+}
+
+// ==TEST==
+    ...测试用例
+````
+
