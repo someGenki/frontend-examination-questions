@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tooltip</title>
+  <style>
+    *[data-title] {
+      position: relative;
+      margin-top: 100px;
+      --tooltip-y-offset: 6px;
+      --tooltip-bg-color: #6b6b6b;
+      --tooltip-line-height: 1;
+      --tooltip-arrow-size: 4px;
+    }
+
+    *[data-title]:hover::before, *[data-title]:hover::after {
+      opacity: 100%;
+      transition: 300ms;
+    }
+
+    *[data-title]::before {
+      content: attr(data-title);
+      position: absolute;
+      padding: 4px 8px;
+      line-height: var(--tooltip-line-height);
+      /* ★ 上偏移量计算：-1*字体高度*行高 - 垂直方向内边距 - 小箭头高度 - 整体高度偏移  */
+      top: calc(-1em * var(--tooltip-line-height) - 8px - var(--tooltip-arrow-size) - var(--tooltip-y-offset));
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 4px;
+      color: white;
+      background-color: var(--tooltip-bg-color);
+
+      opacity: 0;
+    }
+
+    /* 利用border绘制小箭头*/
+    *[data-title]::after {
+      content: " ";
+      position: absolute;
+      line-height: var(--tooltip-line-height);
+      top: calc(-1 * var(--tooltip-arrow-size) - var(--tooltip-y-offset));
+      left: 50%;
+      transform: translateX(-50%);
+      border: var(--tooltip-arrow-size) solid transparent;
+      border-top-color: var(--tooltip-bg-color);
+
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+<button data-title="btn">==BTN==</button>
+<hr>
+<!-- 参考：https://www.cnblogs.com/blackcat/p/11933690.html -->
+> 微软社招面试题
+用css实现一个Tooltip：界面上有一个Button，鼠标hover上去后会在Button上方显示一个tooltip，这个tooltip有圆角，下方有一个小三角形
+</body>
+</html>

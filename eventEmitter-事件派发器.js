@@ -51,7 +51,7 @@ event.off("click", handle);
 
 event.emit("click", 1, 2);
 
-event.once("dbClick", (a, b) => console.log(a, b));
+event.once("dbClick", (a, b) => console.log("dbClick", a, b));
 event.emit("dbClick", 1, 2);
 event.emit("dbClick");
 

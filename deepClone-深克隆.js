@@ -2,6 +2,7 @@
  * 用map是用来解决循环引用
  * WeakMap用是对对象的弱引用，避免大的克隆对象占据太多内存。
  * 这个版本无法克隆Symbol、Map、Set等
+ * TODO 正则考虑
  */
 
 function isObject(target) {

@@ -1,3 +1,15 @@
+function my_compose(...funcs) {
+  if (funcs.length === 0)
+    return arg => arg
+  if (funcs.length === 1)
+    return funcs[0]
+  return funcs.reduce((pre, cur) => {
+    //  前一个把当前函数包裹，返回一个新函数，然后接着包裹下一个函数
+    return (...args) => pre(cur(...args))
+  })
+}
+
+// ==TEST==
 function add1(x) {
   console.log('add1');
   return x + 1;
@@ -13,24 +25,9 @@ function add3(x) {
   return x + 3;
 }
 
-function my_compose(...funs) {
-  if (funs.length === 0)
-    return arg => arg
-  if (funs.length === 1)
-    return funs[0]
-
-  // return funs.reduce((pre, cur) => (...args) => pre(cur(...args)))
-  return funs.reduce((pre, cur) => {
-    return (...args) => {
-      return pre(cur(...args))
-    } // 第一个把第二个包裹起来，然后接着包裹下一个函数
-  })
-}
-
-// ==TEST==
 console.log(add3(add2(add1(1)))) // 7
-let result = my_compose(add1, add2, add3);
-console.log(result(2)) // 8
+
+console.log(my_compose(add1, add2, add3)) // 8
 
 
 
