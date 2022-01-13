@@ -1,22 +1,20 @@
 /**
  * 用map是用来解决循环引用
  * WeakMap用是对对象的弱引用，避免大的克隆对象占据太多内存。
- * 这个版本无法克隆Symbol、Map、Set等
- * TODO 正则考虑
  */
 
-function isObject(target) {
-  return (typeof target === "object") && target !== null;
-}
 
 function deepClone(target, map = new WeakMap()) {
-  if (!isObject(target)) return target
+  if (!(target && typeof target === 'object'))
+    return target  // 非对象直接返回值
+  if (map.get(target))
+    return target  // 解决循环引用
+  if ([Date, RegExp, Set, Map].includes(target.constructor))
+    return (new target.constructor(target)) // 特殊类型克隆
 
-  if (map.get(target)) return target
-
-  const cloneTarget = Array.isArray(target) ? [] : {}
+  const cloneTarget = Object.create(Object.getPrototypeOf(target)) // 继承原型
   map.set(cloneTarget, true)
-  // Object.keys()返回可枚举的属性,Reflect.ownKeys是所有的，通过Object.defineProperty可以设置是否可枚举
+  // Object.keys() 返回可枚举的属性,Reflect.ownKeys是所有的
   Reflect.ownKeys(target).forEach(key => cloneTarget[key] = deepClone(target[key], map))
 
   return cloneTarget;
@@ -32,7 +30,7 @@ let obj = {
   s: Symbol(),
   arr: [1, 2, 3],
   date: new Date,
-// 函数没必要克隆
+// 函数没必要克隆，也可以用function.toString()配合eval克隆
   cry: () => console.log('cry')
 }
 
@@ -44,4 +42,4 @@ console.log(obj.s === cloneObj.s) // true
 console.log(obj.addr === cloneObj.addr) // false
 console.log(obj.date === cloneObj.date) // false
 console.log(obj.arr === cloneObj.arr) // false
-console.log(obj.cry === cloneObj.cry)
+console.log(obj.cry === cloneObj.cry) // true
