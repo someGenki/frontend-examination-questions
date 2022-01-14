@@ -6,8 +6,6 @@
  * 个人参考算法第四版实现地址:
  * https://github.com/someGenki/Algorithms/blob/master/src/chapter7/quicksort.java
  */
-const {randomArray} = require('./utils')
-
 const qsort = function (nums, low = 0, high) {
   high = high ?? nums.length - 1;
   if (low < high) {
@@ -46,6 +44,7 @@ function quickSort(array) {
 }
 
 // ==TEST==
+const {randomArray} = require('./utils')
 let arr1 = randomArray()
 qsort(arr1)
 console.log(arr1)

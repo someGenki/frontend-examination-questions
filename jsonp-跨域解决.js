@@ -3,6 +3,7 @@ function jsonp(url, params, callback = null) {
   const cb_count = ++jsonp.cnt || (jsonp.cnt = 1)
   const callbackName = callback || ('cb_' + cb_count)
 
+  // 拼接请求参数
   let querystring = (url.indexOf("?") > 0 ? '&' : '?') + (`callback=${callbackName}`)
   Object.entries(params || {}).forEach(([k, v]) => querystring += (`&${k}=${v}`))
 
@@ -11,7 +12,7 @@ function jsonp(url, params, callback = null) {
   scriptTag.src = url + querystring
   document.body.appendChild(scriptTag)
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     window[callbackName] = (data) => {
       resolve(data)
       scriptTag.remove()

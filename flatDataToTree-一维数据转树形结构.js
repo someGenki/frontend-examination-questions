@@ -44,18 +44,17 @@ function flatDataToTree(arr) {
   arr.forEach((item) => {
     if (item.parent) {
       let p = map.get(item.parent);
-      if (p) {
-        !p.children ? (p.children = [item]) : p.children.push(item);
-      }
+      if (p)
+        Array.isArray(p.children) ? p.children.push(item) : (p.children = [item])
     } else {
       result.push(item);
     }
-    delete item.parent;
+    delete item.parent; // 可选，删除无用属性
   });
   return result;
 }
 
 
 // ==TEST==
-println(arr2Tree(clone(input), null),true)
+println(arr2Tree(clone(input), null), true)
 println(flatDataToTree(clone(input)))

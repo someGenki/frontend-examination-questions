@@ -2,7 +2,7 @@ function _instanceOf(left/* 实例 */, right/* 类型 */) {
   while (true) {
     if (left === null)
       return false;
-    if (left.__proto__ === right.prototype)
+    if (Object.getPrototypeOf(left) === right.prototype)
       return true;
     left = left.__proto__;
   }

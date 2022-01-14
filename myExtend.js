@@ -72,11 +72,12 @@ console.log("==寄生组合式继承 推荐==");
     this.name = name
   }
 
-  // 创建的一个空的对象，继承了Animal原型的属性
+  // 创建的一个空的对象，继承了Animal原型的属性，并重新记录构造函数
   Dog.prototype = Object.create(Animal.prototype)
   Dog.prototype.constructor = Dog
-  let dog1 = new Dog('one')
 
+  // ==TEST==
+  let dog1 = new Dog('one')
   console.log(dog1 instanceof Dog, dog1 instanceof Animal);
 }();
 

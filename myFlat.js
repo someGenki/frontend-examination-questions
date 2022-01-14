@@ -1,6 +1,6 @@
 function my_flat(arr) {
   while (arr.some(i => Array.isArray(i))) {
-    // 扩展运算符属于ES2018，会结构一层属性
+    // 扩展运算符属于ES2018，会解构一层属性
     arr = [].concat(...arr)
   }
   return arr
