@@ -17,7 +17,6 @@ const curry = (fn, ...args) =>
      */
     : (..._args) => curry(fn, ...args, ..._args);
 
-
 function currying(fn, ...args) {
   return function A() {
     if (arguments.length === 0) {

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>动画</title>
+  <style>
+    /*写个动画，一个盒子，开始时缩放是 0，50%时是 1，100%时是 0，
+    开始结束都是慢速，持续 2 秒，延迟 2 秒，结束后固定在结束的效果*/
+    .box {
+      width: 50px;
+      height: 50px;
+      border: 2px dashed red;
+      animation: swell linear 2s ;
+      animation-delay: 2s;
+    }
+
+    @keyframes swell {
+      0% {
+        transform: scale(0);
+      }
+      50% {
+        transform: scale(0.5);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="box">box</div>
+</body>
+</html>

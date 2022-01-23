@@ -34,7 +34,7 @@ function partition(arr, low, high) {
   return low
 }
 
-// ==利用ES6+新特性5行实现快排(小到大)，但不是原址排序!==
+// ==利用ES6+新特性5行实现简易快排(小到大)，但不是原址排序!==
 function quickSort(array) {
   if (array.length < 2) return array // 递归的终止条件
   let pivot = array.pop() // 取数据最后一个作为分割 中轴

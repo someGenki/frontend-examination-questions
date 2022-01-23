@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>当前时间和倒计时</title>
+</head>
+<body style="font-size: 2rem">
+<div id="currentTime"></div>
+<div id="countDown"></div>
+</body>
+<script>
+  const currentTime = document.getElementById('currentTime');
+
+  function showCurrentTime(container = document.body, separator = '-:', interval = 1000) {
+    const now = new Date(), addZeroFn = (v) => (v < 10 ? `0${v}` : v)
+    const localDate = now.toLocaleDateString().split('/')
+      .map(addZeroFn).join(separator[0])
+    const localTime = ['Hour', 'Minute', 'Second'].map(fn => now[`get${fn}s`]())
+      .map(addZeroFn).join(separator[1])
+    container.innerText = (localDate + ' ' + localTime)
+    setTimeout(() => showCurrentTime(container, separator, interval), interval)
+  }
+
+  showCurrentTime(currentTime)
+  /** ============================ */
+  const countDown = document.getElementById('countDown');
+  const convertTuple = [  // [显示的后缀名,如何求值，如何取模]
+    ['天', (1000 * 60 * 60 * 24), 365], ['时', (1000 * 60 * 60), 24],
+    ['分', (1000 * 60), 60], ['秒', 1000, 60], ['毫秒', 1, 100]];
+
+  const addZeroFn = (v) => (v < 10 && v > 0 ? `0${v}` : v)
+  const countFn = (time, [name, divide, mod]) =>
+    addZeroFn(Math.floor((time / divide % mod))) + name
+
+  function showCountDown(endTime/* Date */, container, callback, interval = 500) {
+    const leftTime = (endTime.getTime() - (new Date()).getTime()); // 计算结束时间，毫秒！
+    const time = (leftTime > 0 ? leftTime : 0) // 避免出现负数倒计时
+    container.innerText = convertTuple.map((v) => countFn(time, v)).join('')
+    if (leftTime < 1 && callback)
+      callback() // 倒计时结束，调用回调函数，并停止定时器
+    else
+      setTimeout(() => showCountDown(endTime, container, interval, callback), interval)
+  }
+
+  showCountDown(new Date(Date.now() + 3600000), countDown, () => console.log('end!'))
+</script>
+</html>

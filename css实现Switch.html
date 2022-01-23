@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .cb-container {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed pink;
+    }
+
+    /* 隐藏原生样式 */
+    [type=checkbox].cb {
+      padding: 0;
+      position: absolute;
+      width: 0;
+    }
+
+    /* 实现外框 */
+    .cb-core {
+      position: relative;
+      width: 40px;
+      height: 20px;
+      border: 1px solid #c4c4c4;
+      background-color: #e3e3e3;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color .3s;
+    }
+
+    /* 选中状态的外框样式: 更换背景色 */
+    .is-checked .cb-core {
+      background-color: deepskyblue;
+    }
+
+    /* 实现小圆球 */
+    .cb-core-ball {
+      position: absolute;
+      top: 1px; /* 垂直居中: (20-18)/2 */
+      left: 0;
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      background-color: white;
+      transition: all .3s;
+    }
+
+    /* 选中状态的小圆球: 切换位置 */
+    .is-checked .cb-core-ball {
+      left: 100%;
+      transform: translateX(-100%);
+    }
+  </style>
+</head>
+<body>
+<div class="cb-container" onclick="handleSwitch()" role="switch">
+  <input type="checkbox" class="cb" name="hot" hidden>
+  <span class="cb-core">
+    <span class="cb-core-ball"></span>
+  </span>
+</div>
+<script>
+  function handleSwitch() {
+    const container = document.querySelector('.cb-container')
+    const flag = container.classList.contains('is-checked');
+    flag ? container.classList.remove('is-checked') : container.classList.add('is-checked')
+    document.querySelector('.cb').checked = !flag
+  }
+</script>
+<button onclick="handleSwitch()">test</button>
+</body>
+</html>
