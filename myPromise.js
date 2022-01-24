@@ -34,6 +34,7 @@ class MyPromise {
     this.resolveQueue.forEach(fn => fn()) // 清空队列
   }
 
+  // 同上面的resolve，改变自身状态并清空队列。
   reject = (reason) => {
     if (this.status !== PENDING) return;
     this.status = REJECTED;
@@ -43,15 +44,17 @@ class MyPromise {
 
   // Promise链式调用的核心
   then(onFulfilled, onRejected) {
+    // 入参的必须都是函数，如果不是就造个函数
     const realOnFulfilled = (typeof onFulfilled === 'function')
       ? onFulfilled : value => value;
     const realOnRejected = (typeof onRejected === 'function')
-      ? onRejected : (reason => {
+      ? onRejected : reason => {
         throw  reason
-      }); // ↑ 入参的必须都是函数，如果不是就造个函数
-    // then每次都会返回一个新的Promise对象
+      };
+
+    // ★then每次都会返回一个新的Promise对象
     const newPromise = new MyPromise((resolve, reject) => {
-      // 返回一个函数，该函数作用是将不同的任务推入微任务队列，根据state，执行不同回调函数
+      // ★返回一个函数，该函数作用是将不同的任务推入微任务队列，其根据state，执行不同回调函数
       const createFnPushTaskToMicrotask = (state) => () => {
         queueMicrotask(() => {
           try {
@@ -72,18 +75,23 @@ class MyPromise {
         // 当前Promise(then的this)状态已经改变则直接执行，将对应的回调函数推入微任务队列
         createFnPushTaskToMicrotask(this.status)()
       }
+
     })
     return newPromise;
   }
 
+  // then的简易调用
   catch(onRejected) {
     this.then(undefined, onRejected);
   }
+
   // finally的回调不接受任何参数，自身会返回原来的 Promise 对象值
   finally(fn) {
     return this.then(
       (value) => MyPromise.resolve(fn()).then(() => value),
-      (error) => MyPromise.resolve(fn()).then(() => {throw error })
+      (error) => MyPromise.resolve(fn()).then(() => {
+        throw error
+      })
     );
   }
 
@@ -111,7 +119,7 @@ MyPromise.all = function (promises) {
   })
 }
 MyPromise.allSettled = function (promises) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let result = [/* {status: ,value: } */], count = 0;
 
     promises.forEach((promise, index) => {
@@ -146,6 +154,35 @@ MyPromise.any = function (promises) {
   }))
 }
 
+// ==Promise串行执行 reduce放==
+/**
+ *
+ * @param {Array} argArr  promiseCreator需要的参数数组
+ * @param {(...args)=>Promise} promiseCreator Promise一旦被创建就开始执行，所以要一个创建Promise的函数
+ */
+MyPromise.serial = function (argArr, promiseCreator) {
+  argArr.reduce((prev, arg) => {
+    return prev.then(() => promiseCreator(arg))
+  }, Promise.resolve())
+}
+
+MyPromise.serial1 = async function (argArr, promiseCreator) {
+  for (const arg of argArr) {
+    await promiseCreator(arg)
+  }
+}
+
+// ==TEST== https://juejin.cn/post/6844903801296519182
+MyPromise.serial([2, 3, 4], function createPromise(time) {
+  return new Promise(((resolve, reject) => {
+    console.log(`wait ${time}s`)
+    setTimeout(() => {
+      console.log('execute')
+      resolve()
+    }, time * 1000)
+  }))
+})
+
 // https://github.com/T-Roc/my-promise/blob/3ebd422d5080698bc7b2539607f932be75ea08a8/my-promise.js#L233
 function resolvePromise(promise, x, resolve, reject) {
   // 避免 promise === x 而造成死循环
@@ -154,48 +191,46 @@ function resolvePromise(promise, x, resolve, reject) {
   }
   // 非对象类型且非函数类型 直接调用resolve()改变 promise 状态
   if (!(x !== null && typeof x === 'object') && !(typeof x === 'function')) {
-    resolve(x);
-  } else {
-    let then;
-    try {
-      // 把 x.then 赋值给 then
-      then = x.then;
-    } catch (error) {
-      // 如果取 x.then 的值时抛出错误 e ，则以 e 为据因拒绝 promise (不加会32个case失败)
-      return reject(error);
-    }
-    // 如果 then 是函数
-    if (typeof then === 'function') {
-      let called = false;
-      // 将 x 作为函数的作用域 this 调用之
-      // 传递两个回调函数作为参数，第一个参数叫做 resolvePromise ，第二个参数叫做 rejectPromise
-      // 名字重名了，我直接用匿名函数了
-      try {
-        then.call(
-          x,
-          // 如果 resolvePromise 以值 y 为参数被调用，则运行 [[Resolve]](promise, y)
-          y => {
-            // 如果 resolvePromise 和 rejectPromise 均被调用，
-            // 或者被同一参数调用了多次，则优先采用首次调用并忽略剩下的调用
-            // 实现这条需要前面加一个变量called
-            if (called) return;
-            called = true;
-            resolvePromise(promise, y, resolve, reject);
-          },
-          // 如果 rejectPromise 以据因 r 为参数被调用，则以据因 r 拒绝 promise
-          r => {
-            if (called) return;
-            called = true;
-            reject(r);
-          });
-      } catch (error) {
-        if (called) return;   // 如果 resolvePromise 或 rejectPromise 已经被调用，则忽略之
-        reject(error);    // 否则以 e 为据因拒绝 promise
-      }
-    } else {
-      resolve(x);  // 如果 then 不是函数，以 x 为参数执行 promise
-    }
+    return resolve(x);
   }
+  // thenable的处理  浏览器中对于返回promise，会额外产生一次微任务
+  let then;
+  try {
+    // 把 x.then 赋值给 then
+    then = x.then;
+  } catch (error) {
+    // 如果取 x.then 的值时抛出错误 e ，则以 e 为据因拒绝 promise (不加会32个case失败)
+    return reject(error);
+  }
+
+  // 如果 then 是函数
+  if (typeof then === 'function') {
+    let called = false;
+    try {
+      then.call(
+        x, // 如果 resolvePromise 以值 y 为参数被调用，则运行 [[Resolve]](promise, y) ?
+        y => {
+          // 如果 resolvePromise 和 rejectPromise 均被调用，
+          // 或者被同一参数调用了多次，则优先采用首次调用并忽略剩下的调用
+          // 实现这条需要前面加一个变量called
+          if (called) return;
+          called = true;
+          resolvePromise(promise, y, resolve, reject);
+        },
+        // 如果 rejectPromise 以据因 r 为参数被调用，则以据因 r 拒绝 promise
+        r => {
+          if (called) return;
+          called = true;
+          reject(r);
+        });
+    } catch (error) {
+      if (called) return;   // 如果 resolvePromise 或 rejectPromise 已经被调用，则忽略之
+      reject(error);    // 否则以 e 为据因拒绝 promise
+    }
+  } else {
+    resolve(x);  // 如果 then 不是函数，以 x 为参数执行 promise
+  }
+
 }
 
 MyPromise.deferred = function () {
