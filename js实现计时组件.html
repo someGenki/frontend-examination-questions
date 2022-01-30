@@ -9,32 +9,46 @@
 <div id="countDown"></div>
 </body>
 <script>
-  const currentTime = document.getElementById('currentTime');
-
-  function showCurrentTime(container = document.body, separator = '-:', interval = 1000) {
-    const now = new Date(), addZeroFn = (v) => (v < 10 ? `0${v}` : v)
-    const localDate = now.toLocaleDateString().split('/')
-      .map(addZeroFn).join(separator[0])
-    const localTime = ['Hour', 'Minute', 'Second'].map(fn => now[`get${fn}s`]())
-      .map(addZeroFn).join(separator[1])
-    container.innerText = (localDate + ' ' + localTime)
-    setTimeout(() => showCurrentTime(container, separator, interval), interval)
+  function formatDate(d, formatter = 'yyyy-MM-dd HH:mm:ss 周w') {
+    const matches = {
+      'y+': d.getFullYear(),          // 年
+      'M+': d.getMonth() + 1,         // 月
+      'd+': d.getDate(),              // 日
+      'H+': d.getHours(),             // 时 (24h制)
+      'h+': d.getHours() % 12,        // 时 (12h制)
+      'm+': d.getMinutes(),           // 分
+      's+': d.getSeconds(),           // 秒
+      'w': '日一二三四五六'[d.getDay()] // 周
+    }
+    for (let symbol in matches) {
+      if (RegExp(`(${symbol})`).test(formatter)) {   // 拼接括号()用于创建捕获组
+        const val = matches[symbol], len = RegExp.$1.length // RegExp.$1就是formatter中捕获到的yyyy MM dd
+        const replace = len === 1 ? val : ('000' + val).slice(-len) // 补零
+        formatter = formatter.replace(RegExp.$1, replace)
+      }
+    }
+    return formatter;
   }
 
-  showCurrentTime(currentTime)
+  !(function showCurrentTime(container = document.body, separator = '-:', interval = 1000) {
+    container.innerText = formatDate(new Date())
+    setTimeout(() => showCurrentTime(container, separator, interval), interval)
+  })(document.getElementById('currentTime'))
+
   /** ============================ */
-  const countDown = document.getElementById('countDown');
-  const convertTuple = [  // [显示的后缀名,如何求值，如何取模]
+
+  const convertTuple = [  // 二维数组: [显示的后缀名,如何求值，如何取模]
     ['天', (1000 * 60 * 60 * 24), 365], ['时', (1000 * 60 * 60), 24],
     ['分', (1000 * 60), 60], ['秒', 1000, 60], ['毫秒', 1, 100]];
 
-  const addZeroFn = (v) => (v < 10 && v > 0 ? `0${v}` : v)
+  const addZeroFn = (v) => (v < 10 && v >= 0 ? `0${v}` : v)
+
   const countFn = (time, [name, divide, mod]) =>
-    addZeroFn(Math.floor((time / divide % mod))) + name
+    addZeroFn(Math.floor(time / divide % mod)) + name
 
   function showCountDown(endTime/* Date */, container, callback, interval = 500) {
-    const leftTime = (endTime.getTime() - (new Date()).getTime()); // 计算结束时间，毫秒！
-    const time = (leftTime > 0 ? leftTime : 0) // 避免出现负数倒计时
+    const leftTime = (endTime.getTime() - Date.now());  // 计算结束时间 (毫秒)
+    const time = (leftTime > 0 ? leftTime : 0)          // 避免出现负数倒计时
     container.innerText = convertTuple.map((v) => countFn(time, v)).join('')
     if (leftTime < 1 && callback)
       callback() // 倒计时结束，调用回调函数，并停止定时器
@@ -42,6 +56,6 @@
       setTimeout(() => showCountDown(endTime, container, interval, callback), interval)
   }
 
-  showCountDown(new Date(Date.now() + 3600000), countDown, () => console.log('end!'))
+  showCountDown(new Date(Date.now() + 3600000), document.getElementById('countDown'), () => console.log('end!'))
 </script>
 </html>

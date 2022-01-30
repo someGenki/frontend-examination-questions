@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>两列/三列布局</title>
+  <style>
+    .left {
+      background-color: pink;
+      border: 2px dashed red;
+
+      float: left;
+      width: 100px;
+    }
+
+    .center {
+      border: 2px solid red;
+      background-color: aqua;
+
+      overflow: auto;/* 创建BFC */
+    }
+
+    .right {
+      background-color: palegreen;
+      border: 2px dashed red;
+
+      float: right;
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+<div class="left">
+  left
+</div>
+<div class="right">
+  right
+</div>
+<div class="center">
+  center
+</div>
+
+</body>
+</html>

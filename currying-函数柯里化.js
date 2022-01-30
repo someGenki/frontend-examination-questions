@@ -11,10 +11,7 @@ const curry = (fn, ...args) =>
   args.length >= fn.length
     // 传入的参数大于等于原始函数fn的参数个数，则直接执行该函数
     ? fn(...args)
-    /**
-     * 传入的参数小于原始函数fn的参数个数时,则继续对当前函数进行柯里化
-     * 返回一个接受所有参数（当前参数和剩余参数） 的函数
-     */
+    // 继续对当前函数进行柯里化，返回一个接受所有参数(当前参数和剩余参数)的函数
     : (..._args) => curry(fn, ...args, ..._args);
 
 function currying(fn, ...args) {
@@ -25,6 +22,13 @@ function currying(fn, ...args) {
       args.push(...arguments)
       return A; // 返回函数A
     }
+  }
+}
+
+function curryIt(fn, ...args) {
+  return function A(arg) {
+    args.push(arg)
+    return args.length < fn.length ? A : fn.apply(null, args)
   }
 }
 

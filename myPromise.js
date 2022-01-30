@@ -162,6 +162,7 @@ MyPromise.any = function (promises) {
  */
 MyPromise.serial = function (argArr, promiseCreator) {
   argArr.reduce((prev, arg) => {
+    // 创建每个promise，当then传入的回调所返回的Promise FULFILLED时，下一个promise的回调才执行
     return prev.then(() => promiseCreator(arg))
   }, Promise.resolve())
 }
@@ -175,9 +176,8 @@ MyPromise.serial1 = async function (argArr, promiseCreator) {
 // ==TEST== https://juejin.cn/post/6844903801296519182
 MyPromise.serial([2, 3, 4], function createPromise(time) {
   return new Promise(((resolve, reject) => {
-    console.log(`wait ${time}s`)
     setTimeout(() => {
-      console.log('execute')
+      console.log('execute after delay:', time)
       resolve()
     }, time * 1000)
   }))
