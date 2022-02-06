@@ -10,12 +10,12 @@
 <script>
   // 刷新率 = 60Hz：每秒60张画面，一张画面1/60秒
   function init() {
-    let lastTime = 0, count = 0;
+    let lastTime = 0, count = 0; // count用于控制更新dom的频率
     let targetEle = document.getElementById("result")
     const countFPS = (timeStamp) => {
       let fps = Math.round(1000 / (timeStamp - lastTime))
       lastTime = timeStamp
-      if (count++ > (fps/2)) {
+      if (count++ > (fps / 2)) {
         targetEle.innerText = fps + 'Hz'
         count = 1
       }

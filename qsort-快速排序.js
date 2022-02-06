@@ -9,9 +9,9 @@
 const qsort = function (nums, low = 0, high) {
   high = high ?? nums.length - 1;
   if (low < high) {
-    let q = partition(nums, low, high);
-    qsort(nums, low, q - 1);
-    qsort(nums, q + 1, high);
+    let mid = partition(nums, low, high);
+    qsort(nums, low, mid - 1);
+    qsort(nums, mid + 1, high);
   }
 }
 

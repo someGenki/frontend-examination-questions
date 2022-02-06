@@ -1,4 +1,4 @@
-// node中的一个工具类 将回调函数的用法变成promise形式的函数
+// node中的一个工具类 将回调函数的用法变成promise形式的函数，原函数的callback用于resolve()
 function promisify(fn) {
   return function (...args) {
     return new Promise((res, rej) => {

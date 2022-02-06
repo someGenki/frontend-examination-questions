@@ -1,4 +1,4 @@
-var longestConsecutive = function (nums) {
+var _longestConsecutive = function (nums) {
   let len = 0, max = 0, map = Object.create(null);
   for (let num of nums) {
     if (!(num in map)) {
@@ -18,39 +18,15 @@ var longestConsecutive = function (nums) {
 longestConsecutive([0, 3, 7, 2, 5, 8, 4, 6, 0, 1])
 
 /**
- * @param {number[]} nums
- * @return {number}
+ 输入：nums = [100,4,200,1,3,2]
+ 输出：4
+ 解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。
  */
-var longestConsecutive = function (nums) {
-  let length = nums.length
-  if (length === 0 || length === 1) return length
-  //
-  let numSet = new Set(nums)
-  //
-  let maxLength = 0
-
-  for (let num of numSet.values()) {
-    if (numSet.has(num - 1)) continue
-
-    let currentNum = num
-    let currentLength = 0
-    while (numSet.has(currentNum)) {
-      currentNum++
-      currentLength++
-    }
-
-    maxLength = Math.max(maxLength, currentLength)
-  }
-
-  return maxLength
-}
-
 function longestConsecutive(nums) {
-  let len = nums.length, max = 0;
+  let len = nums.length, max = 0, numSet = new Set(nums);
   if (len < 2) return len
-  let numSet = new Set(nums)
   for (let num of numSet) {
-    // 从最左端找其
+    // 当num-1不存在时，才开始递增记录长度，即该num是序列头
     if (!numSet.has(num - 1)) {
       let currentNum = num
       let currentLen = 0
