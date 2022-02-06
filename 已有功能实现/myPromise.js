@@ -91,7 +91,7 @@ class MyPromise {
       (value) => MyPromise.resolve(fn()).then(() => value),
       (error) => MyPromise.resolve(fn()).then(() => {
         throw error
-      })
+      }),
     );
   }
 
@@ -105,7 +105,7 @@ class MyPromise {
   }
 }
 
-MyPromise.all = function (promises) {
+MyPromise.all = function(promises) {
   return new Promise((resolve, reject) => {
     let result = [], count = 0;
 
@@ -118,7 +118,7 @@ MyPromise.all = function (promises) {
     })
   })
 }
-MyPromise.allSettled = function (promises) {
+MyPromise.allSettled = function(promises) {
   return new Promise((resolve) => {
     let result = [/* {status: ,value: } */], count = 0;
 
@@ -134,7 +134,7 @@ MyPromise.allSettled = function (promises) {
   })
 }
 
-MyPromise.race = function (promises) {
+MyPromise.race = function(promises) {
   return new Promise(((resolve, reject) => {
     promises.forEach(promise => {
       Promise.resolve(promise).then(res => resolve(res), err => reject(err))
@@ -142,7 +142,7 @@ MyPromise.race = function (promises) {
   }))
 }
 
-MyPromise.any = function (promises) {
+MyPromise.any = function(promises) {
   let count = 0;
   return new Promise(((resolve, reject) => {
     promises.forEach(promise => {
@@ -160,14 +160,14 @@ MyPromise.any = function (promises) {
  * @param {Array} argArr  promiseCreator需要的参数数组
  * @param {(...args)=>Promise} promiseCreator Promise一旦被创建就开始执行，所以要一个创建Promise的函数
  */
-MyPromise.serial = function (argArr, promiseCreator) {
+MyPromise.serial = function(argArr, promiseCreator) {
   argArr.reduce((prev, arg) => {
     // 创建每个promise，当then传入的回调所返回的Promise FULFILLED时，下一个promise的回调才执行
     return prev.then(() => promiseCreator(arg))
   }, Promise.resolve())
 }
 
-MyPromise.serial1 = async function (argArr, promiseCreator) {
+MyPromise.serial1 = async function(argArr, promiseCreator) {
   for (const arg of argArr) {
     await promiseCreator(arg)
   }
@@ -187,7 +187,8 @@ MyPromise.serial([2, 3, 4], function createPromise(time) {
 function resolvePromise(promise, x, resolve, reject) {
   // 避免 promise === x 而造成死循环
   if (promise === x) {
-    return reject(new TypeError('The promise and the return value are the same'));
+    return reject(
+      new TypeError('The promise and the return value are the same'));
   }
   // 非对象类型且非函数类型 直接调用resolve()改变 promise 状态
   if (!(x !== null && typeof x === 'object') && !(typeof x === 'function')) {
@@ -233,9 +234,9 @@ function resolvePromise(promise, x, resolve, reject) {
 
 }
 
-MyPromise.deferred = function () {
+MyPromise.deferred = function() {
   const result = {};
-  result.promise = new MyPromise(function (resolve, reject) {
+  result.promise = new MyPromise(function(resolve, reject) {
     result.resolve = resolve;
     result.reject = reject;
   });

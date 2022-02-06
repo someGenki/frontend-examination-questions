@@ -3,7 +3,7 @@
  * @param {number[]} height
  * @return {number}
  */
-var trap = function (height) {
+var trap = function(height) {
   if (height.length < 3) return 0;  // 至少要 3 根柱子才能构成‘凹’形接水
   const len = height.length;
   const maxLeft = []      // 存放第 i 根柱子左侧最高柱子高度的数组
@@ -18,7 +18,8 @@ var trap = function (height) {
   for (let i = len - 2; i >= 0; i--)  // 反向遍历获取右侧最高柱子高度
     maxRight[i] = Math.max(maxRight[i + 1], height[i])
 
-  return height.reduce((sum, cur, i) => sum + Math.min(maxLeft[i], maxRight[i]) - cur, 0)
+  return height.reduce(
+    (sum, cur, i) => sum + Math.min(maxLeft[i], maxRight[i]) - cur, 0)
 };
 
 console.log(trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]))

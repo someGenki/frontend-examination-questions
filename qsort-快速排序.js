@@ -6,7 +6,7 @@
  * 个人参考算法第四版实现地址:
  * https://github.com/someGenki/Algorithms/blob/master/src/chapter7/quicksort.java
  */
-const qsort = function (nums, low = 0, high) {
+const qsort = function(nums, low = 0, high) {
   high = high ?? nums.length - 1;
   if (low < high) {
     let mid = partition(nums, low, high);

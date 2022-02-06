@@ -66,9 +66,9 @@ let res = permute([1, 2, 3])
 console.log(res)
 
 // ==TEST==
-let names = ["iPhone X", "iPhone XS"]
-let colors = ["黑色", "白色"]
-let storages = ["64g", "256g"]
+let names = ['iPhone X', 'iPhone XS']
+let colors = ['黑色', '白色']
+let storages = ['64g', '256g']
 let res1 = combine([names, colors, storages])
 console.log(res1)
 /* [

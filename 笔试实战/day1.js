@@ -1,5 +1,5 @@
 // 美团第一题：全排列
-function timu1(){
+function timu1() {
   const result = []
   const set = new Set();
 
@@ -28,4 +28,5 @@ function timu1(){
   console.log(result)
 
 }
+
 timu1();

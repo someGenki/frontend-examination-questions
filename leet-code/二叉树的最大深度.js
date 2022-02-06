@@ -4,17 +4,17 @@ function TreeNode(val, left, right) {
   this.right = (right === undefined ? null : right)
 }
 
-const maxDepth = function (root) {
-  let max=0;
-  const dfs=(root,depth)=>{
-    if(root===null){
-      max=Math.max(depth,max)
+const maxDepth = function(root) {
+  let max = 0;
+  const dfs = (root, depth) => {
+    if (root === null) {
+      max = Math.max(depth, max)
       return;
     }
-    dfs(root.left,depth+1)
-    dfs(root.right,depth+1)
+    dfs(root.left, depth + 1)
+    dfs(root.right, depth + 1)
   }
 
-  dfs(root,0)
+  dfs(root, 0)
   return max
 };

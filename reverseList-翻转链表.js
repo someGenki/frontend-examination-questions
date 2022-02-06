@@ -1,4 +1,4 @@
-function reverseList (head) {
+function reverseList(head) {
   let cur = head
   let pre = null // 往后遍历的过程需要有个指针来记录上一个节点，初值必须为null，代表结尾
   let tmp = null // 需要一个指针保存当前节点的下一个，以免丢失

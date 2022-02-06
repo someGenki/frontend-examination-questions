@@ -13,20 +13,18 @@
 3. 对于实现js原有功能，添加my前缀，且不需要带中文: `myBind.js`
 4. 对于css相关的题目，英文可省略: `CSS实现正三角形.html`
 
- 
-
 ### 测试规范
 
 对于一些实现的功能，可以在代码下方添加分割线并写上相关测试案例并附上输出结果
 
 ````js
 // in deepClone.js
-function deepClone(...){ 
-    ... 
+function deepClone(...) {
+...
 }
 
 // ==TEST==
-const obj={
+const obj = {
   name: 'jojo',
   addr: {
     country: 'UK',

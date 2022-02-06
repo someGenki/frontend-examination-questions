@@ -36,22 +36,20 @@ class EventEmitter {
 // ==TEST==
 const event = new EventEmitter();
 
-const handle = (...args) => console.log("handle", args);
+const handle = (...args) => console.log('handle', args);
 
+const handle1 = (...args) => console.log('handle1', args);
 
-const handle1 = (...args) => console.log("handle1", args);
+event.on('click', handle);
+event.on('click', handle1);
 
-
-event.on("click", handle);
-event.on("click", handle1);
-
-event.emit("click", 1, 2, 3, 4);
+event.emit('click', 1, 2, 3, 4);
 console.log('off-click')
-event.off("click", handle);
+event.off('click', handle);
 
-event.emit("click", 1, 2);
+event.emit('click', 1, 2);
 
-event.once("dbClick", (a, b) => console.log("dbClick", a, b));
-event.emit("dbClick", 1, 2);
-event.emit("dbClick");
+event.once('dbClick', (a, b) => console.log('dbClick', a, b));
+event.emit('dbClick', 1, 2);
+event.emit('dbClick');
 

@@ -1,20 +1,20 @@
 // 题目: 将扁平的一维数组转成树形结构
 // 参考: 面试了十几个高级前端，竟然连（扁平数据结构转Tree）都写不出来 - https://juejin.cn/post/6983904373508145189
-const {println, clone} = require("./utils")
+const {println, clone} = require('./utils')
 // ==Data==
 const input = [
-  {name: "文本1", id: 1, parent: null},
-  {name: "文本2", id: 2, parent: 1},
-  {name: "文本3", id: 3, parent: 2},
+  {name: '文本1', id: 1, parent: null},
+  {name: '文本2', id: 2, parent: 1},
+  {name: '文本3', id: 3, parent: 2},
 ]
 const result = [
   {
-    name: "文本1",
+    name: '文本1',
     id: 1,
     children: [
       {
-        name: "文本2", id: 2,
-        children: [{name: "文本3", id: 3,}],
+        name: '文本2', id: 2,
+        children: [{name: '文本3', id: 3}],
       },
     ],
   },
@@ -45,7 +45,9 @@ function flatDataToTree(arr) {
     if (item.parent) {
       let p = map.get(item.parent);
       if (p)
-        Array.isArray(p.children) ? p.children.push(item) : (p.children = [item])
+        Array.isArray(p.children) ?
+          p.children.push(item) :
+          (p.children = [item])
     } else {
       result.push(item);
     }
@@ -53,7 +55,6 @@ function flatDataToTree(arr) {
   });
   return result;
 }
-
 
 // ==TEST==
 println(arr2Tree(clone(input), null), true)

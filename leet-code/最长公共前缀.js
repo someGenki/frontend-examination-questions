@@ -1,4 +1,4 @@
-var longestCommonPrefix = function (strs) {
+var longestCommonPrefix = function(strs) {
   let i = 0, j, flag = true, slen = strs.length, str1 = strs[0],
     len = str1.length
   for (; i < len && flag; ++i) {
@@ -12,7 +12,7 @@ var longestCommonPrefix = function (strs) {
   }
   return str1.substr(0, i)
 };
-let res1 = longestCommonPrefix(["flower", "flow", "flight"])
-let res2 = longestCommonPrefix(["dog", "racecar", "car"])
-let res = longestCommonPrefix(["12"])
+let res1 = longestCommonPrefix(['flower', 'flow', 'flight'])
+let res2 = longestCommonPrefix(['dog', 'racecar', 'car'])
+let res = longestCommonPrefix(['12'])
 console.log(res2)

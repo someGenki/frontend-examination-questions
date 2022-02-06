@@ -1,4 +1,4 @@
-var restoreIpAddresses = function (s) {
+var restoreIpAddresses = function(s) {
   const ans = [], segs = new Array(4), len = s.length;
   const dfs = (count, start) => {
     // 递归的结束条件，当都满足时，加入结果集

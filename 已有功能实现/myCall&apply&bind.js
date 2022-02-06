@@ -1,6 +1,6 @@
 // 可参考 https://juejin.cn/post/7004638318843412493#heading-20
 
-Function.prototype.myCall = function (ctx, ...args) {
+Function.prototype.myCall = function(ctx, ...args) {
   // ctx = ctx || window;
   let fn = Symbol();
   ctx[fn] = this
@@ -9,7 +9,7 @@ Function.prototype.myCall = function (ctx, ...args) {
   return result
 }
 
-Function.prototype.myApply = function (ctx, args = []) {
+Function.prototype.myApply = function(ctx, args = []) {
   if (!Array.isArray(args))
     throw new TypeError('Need Array')
   let fn = Symbol();
@@ -20,7 +20,7 @@ Function.prototype.myApply = function (ctx, args = []) {
 }
 
 // new.target: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/new.target
-Function.prototype.myBind = function (ctx, ...args) {
+Function.prototype.myBind = function(ctx, ...args) {
   const self = this // 记录调用bind 函数的引用
 
   function res() {
@@ -45,7 +45,7 @@ function say(res, res2) {
 
 say.prototype.str = '内容'
 let obj1 = {
-  hello: 'hello'
+  hello: 'hello',
 }
 const back = say.myBind(obj1, 1);
 back(3);

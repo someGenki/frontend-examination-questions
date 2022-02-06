@@ -1,4 +1,4 @@
-var lengthOfLIS = function (nums) {
+var lengthOfLIS = function(nums) {
   let len = nums.length, max = 1, dp = Array(len).fill(1);
   for (let i = 1; i < len; ++i) {
     for (let j = 0; j < i; ++j) {
@@ -12,7 +12,6 @@ var lengthOfLIS = function (nums) {
 };
 
 let test1 = [10, 9, 2, 5, 3, 7, 101, 18] // 4
-
 
 /**
  * 贪心+二分查找，利用arr存放尽可能长的数，所以arr中的每一位尽可能小
@@ -38,7 +37,6 @@ function _lengthOfLIS(nums) {
   console.log(arr) // [ 2, 3, 7, 18 ]
   return max;
 }
-
 
 console.log(_lengthOfLIS(test1))
 console.log(_lengthOfLIS([0, 8, 4, 12, 2]))

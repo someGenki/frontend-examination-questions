@@ -4,28 +4,28 @@
   <meta charset="UTF-8">
   <title>test</title>
   <style>
-      .color {
-          display: flex;
-          align-items: center;
-          justify-content: flex-start;
-      }
+    .color {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
 
-      .color input {
-          font-size: 14px;
-          line-height: 1.5;
-          border-radius: 4px;
-          width: 120px;
-          margin-left: 5px;
-          border: 1px solid #efeff4;
-          padding: 5px;
-          outline: 0;
-          resize: none;
-      }
+    .color input {
+      font-size: 14px;
+      line-height: 1.5;
+      border-radius: 4px;
+      width: 120px;
+      margin-left: 5px;
+      border: 1px solid #efeff4;
+      padding: 5px;
+      outline: 0;
+      resize: none;
+    }
 
-      .divider {
-          color: #25bb9b;
-          margin: 0 10px;
-      }
+    .divider {
+      color: #25bb9b;
+      margin: 0 10px;
+    }
   </style>
 </head>
 <body>
@@ -67,7 +67,7 @@
         else arr.push(s)
       })
       if (arr.length !== 3 || bool === false) return '';
-      let str = "#"
+      let str = '#'
       // 不足一个F则要补零
       arr.forEach(num => {
         if (num < 16) str += '0'
@@ -90,11 +90,11 @@
         else result.push(num)
       }
       return result.join(',');
-    }
+    },
   };
   rgb2hex.init({
     rgb: document.getElementsByClassName('rgb')[0],
-    hex: document.getElementsByClassName('hex')[0]
+    hex: document.getElementsByClassName('hex')[0],
   });
 </script>
 </html>

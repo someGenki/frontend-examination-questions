@@ -1,4 +1,4 @@
-var lowestCommonAncestor = function (root, p, q) {
+var lowestCommonAncestor = function(root, p, q) {
   if (root === null || root === p || root === q)
     return root;    // 遍历到null时或找到p | q返回该root节点
   let left = lowestCommonAncestor(root.left, p, q);

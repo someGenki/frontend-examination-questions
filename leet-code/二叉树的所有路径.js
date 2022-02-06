@@ -1,4 +1,4 @@
-var binaryTreePaths = function (root, res = []) {
+var binaryTreePaths = function(root, res = []) {
   const dfs = (node, path) => {
     if (node.left === null && node.right === null)
       res.push(path)
@@ -7,6 +7,6 @@ var binaryTreePaths = function (root, res = []) {
     if (node.right != null)
       dfs(node.right, `${path}->${node.right.val}`)
   }
-  dfs(root, root.val + "")
+  dfs(root, root.val + '')
   return res;
 };

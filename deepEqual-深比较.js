@@ -18,14 +18,14 @@ function deepEqual(o1, o2) {
 // ==TEST==
 const obj1 = {
   name: 'jojo', age: 18, addr: {
-    cite: 'London'
-  }
+    cite: 'London',
+  },
 }
 
 const obj2 = {
   name: 'jojo', age: 18, addr: {
-    cite: 'London'
-  }
+    cite: 'London',
+  },
 }
 
 console.log(obj1 === obj1);                // true

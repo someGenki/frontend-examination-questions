@@ -4,7 +4,7 @@
  * @param {number[]} s
  * @return {number}
  */
-const findContentChildren = function (g, s) {
+const findContentChildren = function(g, s) {
   // 测试用例并非都是小到大的有序数组
   g = g.sort((a, b) => a - b); // 小孩所需要的胃口值
   s = s.sort((a, b) => a - b); // 饼干所提供的胃口值
@@ -19,3 +19,5 @@ const findContentChildren = function (g, s) {
   }
   return count;
 };
+
+const { dependencies, devDependencies, name, version } = pkg

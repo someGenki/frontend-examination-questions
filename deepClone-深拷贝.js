@@ -15,7 +15,8 @@ function deepClone(target, map = new WeakMap()) {
   const cloneTarget = Object.create(Object.getPrototypeOf(target)) // 继承原型
   map.set(cloneTarget, true)
   // Object.keys() 返回可枚举的属性,Reflect.ownKeys是所有的
-  Reflect.ownKeys(target).forEach(key => cloneTarget[key] = deepClone(target[key], map))
+  Reflect.ownKeys(target).
+    forEach(key => cloneTarget[key] = deepClone(target[key], map))
 
   return cloneTarget;
 }
@@ -25,13 +26,13 @@ let obj = {
   name: 'jojo',
   addr: {
     country: 'UK',
-    city: 'London'
+    city: 'London',
   },
   s: Symbol(),
   arr: [1, 2, 3],
   date: new Date,
 // 函数没必要克隆，也可以用function.toString()配合eval克隆
-  cry: () => console.log('cry')
+  cry: () => console.log('cry'),
 }
 
 let cloneObj = deepClone(obj);

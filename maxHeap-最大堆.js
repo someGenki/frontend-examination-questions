@@ -27,7 +27,6 @@ class Heap {
     return this.heap.length;
   }
 
-
   swap(index1, index2) { // 交换节点位置
     const temp = this.heap[index1];
     this.heap[index1] = this.heap[index2];
@@ -111,7 +110,7 @@ console.log(mh1.pop())
 console.log(mh1.pop())
 console.log(mh1.pop())
 
-var findKthLargest = function (nums, k) {
+var findKthLargest = function(nums, k) {
   const h = new MinHeap(); // heap中存放着前k个元素
   nums.forEach(n => {
     h.add(n);

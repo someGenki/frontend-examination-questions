@@ -4,7 +4,7 @@
  * @param {string} version2
  * @return {number}
  */
-var compareVersion = function (version1, version2) {
+var compareVersion = function(version1, version2) {
   const a1 = version1.split('.'), a2 = version2.split('.')
   const maxLen = Math.max(a1.length, a2.length)
   for (let i = 0; i < maxLen; i++) {

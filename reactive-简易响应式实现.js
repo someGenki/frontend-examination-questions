@@ -22,7 +22,7 @@ let activeEffect = null
 const targetMap = new WeakMap()
 
 function ob(target) {
-  const isObject = (o) => (typeof o === "object" && o !== null)
+  const isObject = (o) => (typeof o === 'object' && o !== null)
   // 另外还用weakMap判断重复代理
   const handler = {
     // 原生对象 | key |  newValue | 具体被set的对象
@@ -39,7 +39,7 @@ function ob(target) {
       const res = Reflect.deleteProperty(...arguments)
       trigger(target, 'del', key)  // 触发依赖 - 删除
       return res
-    }
+    },
   }
   if (!isObject(target)) return target
   return new Proxy(target, handler)
@@ -80,7 +80,8 @@ watch(() => {
 });
 _jojo.pets.dog.name += '!'*/
 
-console.log('><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><')
+console.log(
+  '><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><')
 
 const data = ob({count: 0, foo: 'test'});
 

@@ -3,7 +3,7 @@ function ListNode(val) {
   this.next = null;
 }
 
-var hasCycle = function (head) {
+var hasCycle = function(head) {
   let fast = head, slow = head;
   // 快慢指针，slow一次移动一步，fast一次移动两步，有环就一定会相遇
   while (fast?.next) {

@@ -1,4 +1,4 @@
-const findKthLargest = function (nums, k) {
+const findKthLargest = function(nums, k) {
   let low = 0, high = nums.length - 1;
   while (low <= high) {
     const mid = partition(nums, low, high);

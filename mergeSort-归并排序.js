@@ -61,7 +61,6 @@ function bubbleSort(arr) {
   return arr
 }
 
-
 // ==TEST==
 const {randomArray} = require('./utils')
 const arr1 = randomArray()

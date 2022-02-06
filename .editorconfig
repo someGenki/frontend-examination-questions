@@ -11,7 +11,7 @@ indent_size = 2
 # Tips: 如要避免 warning: LF will be replaced by CRLF：
 # 命令行:  git config --global core.autocrlf false
 end_of_line = lf
-insert_final_newline = true     # 去除行首任意空白字符
+insert_final_newline = true # 去除行首任意空白字符
 trim_trailing_whitespace = true # 始终在文件末尾插入一个新行
 
 [*.md]

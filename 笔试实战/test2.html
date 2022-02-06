@@ -4,31 +4,31 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <style>
-      table {
-          border-collapse: collapse;
-          width: 360px;
-          table-layout: fixed;
-      }
+    table {
+      border-collapse: collapse;
+      width: 360px;
+      table-layout: fixed;
+    }
 
-      thead {
-          background: #f5f7fa;
-      }
+    thead {
+      background: #f5f7fa;
+    }
 
-      thead th {
-          font-weight: strong;
-          cursor: pointer;
-      }
+    thead th {
+      font-weight: strong;
+      cursor: pointer;
+    }
 
-      thead th:hover {
-          color: #25bb9b;
-      }
+    thead th:hover {
+      color: #25bb9b;
+    }
 
-      td, th {
-          border: 1px solid #e1e1e1;
-          padding: 0;
-          text-align: center;
-          padding: 10px 0;
-      }
+    td, th {
+      border: 1px solid #e1e1e1;
+      padding: 0;
+      text-align: center;
+      padding: 10px 0;
+    }
   </style>
 
 </head>
@@ -83,16 +83,16 @@
       console.log(param)
       const table = param.el;
       if (!table) return;
-      const tbody = table.querySelector("tbody");
-      const ths = [...table.querySelectorAll("th")];
-      const trs = [...tbody.querySelectorAll("tr")];
+      const tbody = table.querySelector('tbody');
+      const ths = [...table.querySelectorAll('th')];
+      const trs = [...tbody.querySelectorAll('tr')];
       const list = this.getBodyList(trs);
       ths.forEach((th, index) => {
         const fn = () => {
           const isAsc1 = that.isAsc(list, index);
           const li = list.sort((a, b) => !isAsc1 ?
             (a.value[index] - b.value[index]) :
-            (b.value[index] - a.value[index])
+            (b.value[index] - a.value[index]),
           );
           trs.forEach((tr, index) => {
             console.log(tr)
@@ -118,11 +118,11 @@
           flag = false
       }
       return flag
-    }
+    },
   };
 
   order.init({
-    el: document.getElementsByClassName('container')[0].getElementsByTagName("table")[0]
+    el: document.getElementsByClassName('container')[0].getElementsByTagName('table')[0],
   });
 </script>
 </body>

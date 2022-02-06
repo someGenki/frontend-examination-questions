@@ -14,5 +14,5 @@ module.exports = {
   randomArray(size, range = 50) {
     const randomNum = (range) => Math.floor(Math.random() * range)
     return Array.from(Array(size || randomNum(50)), _ => randomNum(range))
-  }
+  },
 }

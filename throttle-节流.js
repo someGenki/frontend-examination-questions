@@ -2,7 +2,7 @@
 // ==定时器版节流，立即执行==
 function throttle(fn, interval = 1000) {
   let timer = null
-  return function (...args) {
+  return function(...args) {
     if (timer === null) {
       fn(...args)
       // timer为null时，有空可执行。并设置timer，interval之后再置为null

@@ -3,7 +3,7 @@
  * @param {number} k
  * @return {number[]}
  */
-var getLeastNumbers = function (arr, k) {
+var getLeastNumbers = function(arr, k) {
   let left = 0, right = arr.length - 1
   while (left <= right) {
     const mid = partition(arr, left, right) // 按照left到right进行划分，并返回中轴位置

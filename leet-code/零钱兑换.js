@@ -3,7 +3,7 @@
  * @param {number} amount
  * @return {number}
  */
-var coinChange = function (coins, amount) {
+var coinChange = function(coins, amount) {
   if (amount < 1) return amount
   const dp = Array(amount + 1).fill(Infinity)
   dp[0] = 0;

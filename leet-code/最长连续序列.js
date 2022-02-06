@@ -1,4 +1,4 @@
-var _longestConsecutive = function (nums) {
+var _longestConsecutive = function(nums) {
   let len = 0, max = 0, map = Object.create(null);
   for (let num of nums) {
     if (!(num in map)) {

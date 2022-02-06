@@ -12,7 +12,7 @@ function TreeNode(val, left, right) {
   this.right = (right === undefined ? null : right)
 }
 
-var maxPathSum = function (root, max = -1001) {
+var maxPathSum = function(root, max = -1001) {
   // 获取节点最大贡献值
   const maxGain = (node) => {
     if (node === null) return 0;

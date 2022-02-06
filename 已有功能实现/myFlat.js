@@ -6,10 +6,11 @@ function my_flat(arr) {
   return arr
 }
 
-
 // ==递归+reduce==
 function my_flat1(arr) {
-  return arr.reduce((prev, cur) => prev.concat(Array.isArray(cur) ? my_flat1(cur) : cur), [/*initValue*/])
+  return arr.reduce(
+    (prev, cur) => prev.concat(Array.isArray(cur) ? my_flat1(cur) : cur),
+    [/*initValue*/])
 }
 
 // ==TEST==

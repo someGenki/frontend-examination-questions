@@ -19,9 +19,12 @@ function getUrlParam(sUrl, sKey = undefined) {
 }
 
 // ==TEST==
-let a = getUrlParam('https://www.nowcoder.com?key=1&key=2&key=3&key=4&test=4#hehe', 'test');
-let b = getUrlParam('https://www.nowcoder.com?key=1&key=2&key=3&key=4&test=4#hehe', 'key');
-let c = getUrlParam('https://www.nowcoder.com?key=1&key=2&key=3&key=4&test=4#hehe');
+let a = getUrlParam(
+  'https://www.nowcoder.com?key=1&key=2&key=3&key=4&test=4#hehe', 'test');
+let b = getUrlParam(
+  'https://www.nowcoder.com?key=1&key=2&key=3&key=4&test=4#hehe', 'key');
+let c = getUrlParam(
+  'https://www.nowcoder.com?key=1&key=2&key=3&key=4&test=4#hehe');
 console.log(a)
 console.log(b)
 console.log(c)
