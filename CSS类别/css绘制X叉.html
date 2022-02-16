@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .cha {
+      position: absolute;
+      --size: 100px
+    }
+
+    .cha::before, .cha::after {
+      content: '';
+      position: absolute;
+      background: red;
+      height: 1px;
+      width: var(--size);
+      transform: rotate(45deg);
+    }
+
+    .cha::before {
+      transform: rotate(45deg);
+    }
+
+    .cha::after {
+      transform: rotate(-45deg);
+    }
+  </style>
+</head>
+<body style="padding: 200px">
+<span class="cha"></span>
+<!--TODO 绘制X-->
+</body>
+</html>

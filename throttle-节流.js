@@ -1,4 +1,4 @@
-// 使用场景: input输入 页面滚动 窗口缩放 按键长按
+// 使用场景: input输入 页面滚动 窗口缩放 按键长按 联想搜索 滚动加载更多
 // ==定时器版节流，立即执行==
 function throttle(fn, interval = 1000) {
   let timer = null

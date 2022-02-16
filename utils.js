@@ -15,4 +15,9 @@ module.exports = {
     const randomNum = (range) => Math.floor(Math.random() * range)
     return Array.from(Array(size || randomNum(50)), _ => randomNum(range))
   },
+  random(start, end) {
+  let r1 = Math.random()    // [0,1)
+  let r2 = r1 * (end - start)   // [0,end - start)
+  return Math.round(r2 + start)     // floor:[start,end) ceil:(start,end] round:[start,end]
+}
 }

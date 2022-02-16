@@ -1,4 +1,4 @@
-// 延时执行版防抖
+// 延时执行版防抖  使用场景：按钮点击、输入框验证
 function debounce(fn, delay = 1000) {
   let timer = null;
   return function(...args) {
