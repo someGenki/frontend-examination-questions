@@ -47,6 +47,5 @@ function longestPalindrome(s) {
 }
 
 // babad
-let res = longestPalindrome('ac')
-console.log(res)
+console.log(longestPalindrome('ac'))
 

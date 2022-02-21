@@ -6,13 +6,11 @@
  * 个人参考算法第四版实现地址:
  * https://github.com/someGenki/Algorithms/blob/master/src/chapter7/quicksort.java
  */
-const qsort = function(nums, low = 0, high) {
-  high = high ?? nums.length - 1;
-  if (low < high) {
-    let mid = partition(nums, low, high);
-    qsort(nums, low, mid - 1);
-    qsort(nums, mid + 1, high);
-  }
+const qsort = function qsort(nums, low, high) {
+  if (low >= high) return;
+  const mid = partition(nums, low, high);
+  qsort(nums, low, mid - 1);
+  qsort(nums, mid + 1, high);
 }
 
 function partition(arr, low, high) {
@@ -44,9 +42,9 @@ function quickSort(array) {
 }
 
 // ==TEST==
-const {randomArray} = require('./utils')
+const { randomArray } = require('./utils')
 let arr1 = randomArray()
-qsort(arr1)
+qsort(arr1, 0, arr1.length - 1)
 console.log(arr1)
 
 let arr2 = randomArray()

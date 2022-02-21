@@ -27,7 +27,7 @@ function add3(x) {
 
 console.log(add3(add2(add1(1)))) // 7
 
-console.log(my_compose(add1, add2, add3)) // 8
+console.log(my_compose(add1, add2, add3)(2)) // 8
 
 
 

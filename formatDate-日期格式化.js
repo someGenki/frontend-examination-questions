@@ -12,7 +12,7 @@ function formatDate(d, formatter = 'yyyy-MM-dd HH:mm:ss') {
   for (let symbol in matches) {
     if (RegExp(`(${symbol})`).test(formatter)) {   // 拼接括号()用于创建捕获组
       const val = matches[symbol], len = RegExp.$1.length // RegExp.$1就是formatter中捕获到的yyyy MM dd
-      let replace = len === 1 ? val : ('000' + val).slice(-len) // 补零
+      const replace = len === 1 ? val : ('000' + val).slice(-len) // 补零
       formatter = formatter.replace(RegExp.$1, replace)
     }
   }

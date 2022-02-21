@@ -1,5 +1,5 @@
 const lengthOfLongestSubstring1 = function lengthOfLongestSubstring(str) {
-  if (str.length<1) return 0
+  if (str.length < 1) return 0
   let left = 0, right = 1, max = 0;
   // 每次扩张判断有是否重复字符，有就更新最大值，并更新左边界位置
   for (let len = str.length; right < len; ++right) {
@@ -13,7 +13,7 @@ const lengthOfLongestSubstring1 = function lengthOfLongestSubstring(str) {
 }
 
 function lengthOfLongestSubstring(s) {
-  const len = s.length, map = new Array(128).fill(-1);
+  const len = s.length, map = Array(128).fill(-1);
   let max = 0, left = 0, right = 0, currentChar, currentCharIndex;
   for (; right < len; ++right) {
     currentChar = s.charCodeAt(right);

@@ -1,25 +1,23 @@
 // 归并排序:“递归”+“合并”,递归的排序好每一部分，最后合并
 function mergeSort(arr) {
   if (arr.length < 2) return arr
-  let mid = Math.floor(arr.length / 2)
-  let left = mergeSort(arr.slice(0, mid))
-  let right = mergeSort(arr.slice(mid))
+  const mid = Math.floor(arr.length / 2)
+  const left = mergeSort(arr.slice(0, mid))
+  const right = mergeSort(arr.slice(mid))
   return merge(left, right)
 }
 
 // 核心：合并两个有序数组
 function merge(left, right) {
-  let i = 0, j = 0, res = []
-  //  "两权相较取其轻"
-  while (i < left.length && j < right.length) {
-    left[i] <= right[j]
-      ? res.push(left[i++])
-      : res.push(right[j++])
+  let leftIndex = 0, rightIndex = 0, res = []
+  while (leftIndex < left.length && rightIndex < right.length) {
+    left[leftIndex] <= right[rightIndex] //  "两权相较取其轻"
+      ? res.push(left[leftIndex++])
+      : res.push(right[rightIndex++])
   }
-  // 将剩余的数组都加入res数组
-  i < left.length
-    ? res.push(...left.slice(i))
-    : res.push(...right.slice(j))
+  leftIndex < left.length // 将剩余的数组都加入res数组
+    ? res.push(...left.slice(leftIndex))
+    : res.push(...right.slice(rightIndex))
   return res;
 }
 
@@ -62,7 +60,7 @@ function bubbleSort(arr) {
 }
 
 // ==TEST==
-const {randomArray} = require('./utils')
+const { randomArray } = require('./utils')
 const arr1 = randomArray()
 console.log(mergeSort(arr1))
 const arr2 = randomArray()

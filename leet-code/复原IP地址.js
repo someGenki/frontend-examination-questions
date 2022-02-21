@@ -1,7 +1,7 @@
 var restoreIpAddresses = function(s) {
-  const ans = [], segs = new Array(4), len = s.length;
-  const dfs = (count, start) => {
-    // 递归的结束条件，当都满足时，加入结果集
+  const ans = [], segs = Array(4), len = s.length;
+  const dfs = (count/* segs索引 */, start/* str起始索引 */) => {
+    // 递归的结束条件，segs放满4位且遍历到字符串末尾时，加入结果集
     if (count === 4 || start === len) {
       if (count === 4 && start === len)
         ans.push(segs.join('.'));
@@ -13,10 +13,9 @@ var restoreIpAddresses = function(s) {
     }
     // 提取数字，遍历所有情况
     for (let i = start + 1; i <= len; ++i) {
-      const num = Number(s.substring(start, i))
-      if (num > 0 && num <= 255)
-        dfs(count + 1, i, segs[count] = num);
-      else break;
+      const num = parseInt(s.substring(start, i), 10)
+      if (num < 1 || num > 255) break;
+      else dfs(count + 1, i, segs[count] = num);
     }
   }
 
