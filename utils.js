@@ -9,12 +9,12 @@ module.exports = {
   clone(data) {
     return JSON.parse(JSON.stringify(data))
   },
-  // TODO运行时间测试
   // 产生随机长度，随机内容的数组
   randomArray(size, range = 50) {
     const randomNum = (range) => Math.floor(Math.random() * range)
     return Array.from(Array(size || randomNum(50)), _ => randomNum(range))
   },
+
   random(start, end) {
     let r1 = Math.random()    // [0,1)
     let r2 = r1 * (end - start)   // [0,end - start)
@@ -28,7 +28,21 @@ module.exports = {
       this.createTree(arr, index * 2 + 2),
     )
   },
+
+  createListNode(arr) {
+    function ListNode(val, next) {
+      this.val = (val === undefined ? 0 : val)
+      this.next = (next === undefined ? null : next)
+    }
+
+    let prev = null
+    for (let i = arr.length - 1; i >= 0; i--) {
+      prev = new ListNode(arr[i], prev)
+    }
+    return prev
+  },
 }
+
 function TreeNode(val = 0, left = null, right = null) {
   this.val = val
   this.left = left
