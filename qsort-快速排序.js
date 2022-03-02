@@ -24,7 +24,7 @@ function partition(arr, low, high) {
   // low 向右移动，high 向左移动，直到 low 和 high 指向同一元素为止,中轴位置诞生
   while (low < high) {
     // 将high(数组索引<右侧>)移动到值比中轴值的大时，swap调整位置，让大值出现再中轴左侧
-    while (low < high && arr[high] <= pivot) high--
+    while (low < high && arr[high] <= pivot) high-- // 先high！
     swap(arr, low, high)
     while (low < high && arr[low] >= pivot) low++
     swap(arr, low, high)

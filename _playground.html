@@ -1,34 +1,22 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-  <style>
-    .container{
-      background-color: pink;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      width: 350px;
-    }
-    .box{
-      width: 150px;
-      height:150px;
-      border: 1px solid red;
-    }
-  </style>
+  <meta charset=utf-8>
 </head>
 <body>
 
-<div class="container">
-  <div class="box"></div>
-  <div class="box"></div>
-  <div class="box"></div>
-
-</div>
-
+<script type="text/javascript">
+  const _permute = string => {
+    const arr = string.split(''), len = arr.length;
+    const res = []
+    const dfs = (start, path) => {
+      if (start === len) return res.push(path.join(''))
+      arr.forEach(v => !path.includes(v) && dfs(start + 1, path.concat(v)))
+    }
+    dfs(0, [])
+    return res
+  }
+  console.log(_permute('abc'))
+</script>
 </body>
 </html>

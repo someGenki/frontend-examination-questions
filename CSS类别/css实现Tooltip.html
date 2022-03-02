@@ -4,9 +4,8 @@
   <meta charset="UTF-8">
   <title>Tooltip</title>
   <style>
-    *[data-title] {
+    *[data-title] { /*[属性选择器]前缀用于限定元素*/
       position: relative;
-      margin-top: 100px;
       --tooltip-y-offset: 6px;
       --tooltip-bg-color: #6b6b6b;
       --tooltip-line-height: 1;
@@ -16,28 +15,29 @@
     /* 添加动画效果 */
     *[data-title]:hover::before, *[data-title]:hover::after {
       opacity: 100%;
-      transition: 300ms;
+      transition: 500ms;
     }
 
+    /* 使用attr函数获取文字内容，并计算偏移量 */
     *[data-title]::before {
-      content: attr(data-title);
+      content: attr(data-title); /*css函数，还有calc,var,rgb,max等*/
       position: absolute;
       padding: 4px 8px;
       line-height: var(--tooltip-line-height);
-      /* ★ 上偏移量计算：-1*字体高度*行高 - 垂直方向内边距 - 小箭头高度 - 整体高度偏移  */
+      /* ★ 上偏移量计算：-1 * (字体高度 * 行高) - 垂直方向内边距和  - 小箭头高度 - 整体(箭头加方框)高度偏移  */
       top: calc(-1em * var(--tooltip-line-height) - 8px - var(--tooltip-arrow-size) - var(--tooltip-y-offset));
       left: 50%;
       transform: translateX(-50%);
+
       border-radius: 4px;
       color: white;
       background-color: var(--tooltip-bg-color);
-
       opacity: 0;
     }
 
-    /* 利用border绘制小箭头*/
+    /* 利用border绘制小箭头:三边框透明，上边框有颜色*/
     *[data-title]::after {
-      content: " ";
+      content: "";
       position: absolute;
       line-height: var(--tooltip-line-height);
       top: calc(-1 * var(--tooltip-arrow-size) - var(--tooltip-y-offset));
@@ -45,13 +45,12 @@
       transform: translateX(-50%);
       border: var(--tooltip-arrow-size) solid transparent;
       border-top-color: var(--tooltip-bg-color);
-
       opacity: 0;
     }
   </style>
 </head>
-<body>
-<button data-title="btn">==BTN==</button>
+<body style="margin-top: 150px">
+<button data-title="btn">Click me</button>
 <hr>
 <!-- 参考：https://www.cnblogs.com/blackcat/p/11933690.html -->
 > 微软社招面试题

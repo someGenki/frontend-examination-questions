@@ -48,9 +48,7 @@ class MyPromise {
     const realOnFulfilled = (typeof onFulfilled === 'function')
       ? onFulfilled : value => value;
     const realOnRejected = (typeof onRejected === 'function')
-      ? onRejected : reason => {
-        throw  reason
-      };
+      ? onRejected : reason => {throw  reason };
 
     // ★then每次都会返回一个新的Promise对象
     const newPromise = new MyPromise((resolve, reject) => {
@@ -61,37 +59,35 @@ class MyPromise {
             const x = (state === FULFILLED)
               ? realOnFulfilled(this.value)
               : realOnRejected(this.reason);
-            resolvePromise(newPromise, x, resolve, reject);
+            resolvePromise(newPromise, x, resolve, reject); // 对于x是非thenable，可以直接调用resolve(x)
           } catch (error) {
             reject(error)
           }
         })
       }
-
+      // 如果当前promise“pending"则创建一个函数，用于把任务加入微任务队列。将该函数加入回调队列中
+      // 否则如果状态以改变，跳过加入回调队列的步骤，直接创建任务，将其推入微任务队列。
       if (this.status === PENDING) {
         this.resolveQueue.push(createFnPushTaskToMicrotask(FULFILLED));
         this.rejectQueue.push(createFnPushTaskToMicrotask(REJECTED));
       } else {
-        // 当前Promise(then的this)状态已经改变则直接执行，将对应的回调函数推入微任务队列
         createFnPushTaskToMicrotask(this.status)()
       }
-
     })
+
     return newPromise;
   }
 
   // then的简易调用
   catch(onRejected) {
-    this.then(undefined, onRejected);
+    return this.then(undefined, onRejected);
   }
 
   // finally的回调不接受任何参数，自身会返回原来的 Promise 对象值
   finally(fn) {
     return this.then(
       (value) => MyPromise.resolve(fn()).then(() => value),
-      (error) => MyPromise.resolve(fn()).then(() => {
-        throw error
-      }),
+      (error) => MyPromise.resolve(fn()).then(() => {throw error}),
     );
   }
 
@@ -105,86 +101,8 @@ class MyPromise {
   }
 }
 
-MyPromise.all = function(promises) {
-  return new Promise((resolve, reject) => {
-    let result = [], count = 0;
-
-    promises.forEach((promise, index) => {
-      Promise.resolve(promise).then(res => {
-        result[index] = res
-        if (++count === promises.length)
-          resolve(result) // 都完成了才resolve！
-      }, err => reject(err))
-    })
-  })
-}
-MyPromise.allSettled = function(promises) {
-  return new Promise((resolve) => {
-    let result = [/* {status: ,value: } */], count = 0;
-
-    promises.forEach((promise, index) => {
-      Promise.resolve(promise).then((res) => {
-        result[index] = {status: 'fulfilled', value: res}
-        ++count === promises.length && resolve(result)
-      }, (reason) => {
-        result[index] = {status: 'rejected', reason}
-        ++count === promises.length && resolve(result)
-      })
-    })
-  })
-}
-
-MyPromise.race = function(promises) {
-  return new Promise(((resolve, reject) => {
-    promises.forEach(promise => {
-      Promise.resolve(promise).then(res => resolve(res), err => reject(err))
-    })
-  }))
-}
-
-MyPromise.any = function(promises) {
-  let count = 0;
-  return new Promise(((resolve, reject) => {
-    promises.forEach(promise => {
-      Promise.resolve(promise).then(res => resolve(res), err => {
-        if (++count === promises.length)
-          reject(new Error('All promises were rejected'))
-      })
-    })
-  }))
-}
-
-// ==Promise串行执行 reduce放==
-/**
- *
- * @param {Array} argArr  promiseCreator需要的参数数组
- * @param {(...args)=>Promise} promiseCreator Promise一旦被创建就开始执行，所以要一个创建Promise的函数
- */
-MyPromise.serial = function(argArr, promiseCreator) {
-  argArr.reduce((prev, arg) => {
-    // 创建每个promise，当then传入的回调所返回的Promise FULFILLED时，下一个promise的回调才执行
-    return prev.then(() => promiseCreator(arg))
-  }, Promise.resolve())
-}
-
-MyPromise.serial1 = async function(argArr, promiseCreator) {
-  for (const arg of argArr) {
-    await promiseCreator(arg)
-  }
-}
-
-// ==TEST== https://juejin.cn/post/6844903801296519182
-MyPromise.serial([2, 3, 4], function createPromise(time) {
-  return new Promise(((resolve, reject) => {
-    setTimeout(() => {
-      console.log('execute after delay:', time)
-      resolve()
-    }, time * 1000)
-  }))
-})
-
-// https://github.com/T-Roc/my-promise/blob/3ebd422d5080698bc7b2539607f932be75ea08a8/my-promise.js#L233
 function resolvePromise(promise, x, resolve, reject) {
+  // https://github.com/T-Roc/my-promise/blob/3ebd422d5080698bc7b2539607f932be75ea08a8/my-promise.js#L233
   // 避免 promise === x 而造成死循环
   if (promise === x) {
     return reject(
@@ -234,6 +152,87 @@ function resolvePromise(promise, x, resolve, reject) {
 
 }
 
+// then注册回调，count为length时resolve() ,err直接reject
+MyPromise.all = function all(promises) {
+  return new Promise((resolve, reject) => {
+    let result = [], count = 0;
+
+    promises.forEach((promise, index) => {
+      Promise.resolve(promise).then(res => {
+        result[index] = res
+        if (++count === promises.length)
+          resolve(result) // 都完成了才resolve！
+      }, err => reject(err))
+    })
+  })
+}
+// 都注册回调，count为length时resolve()
+MyPromise.allSettled = function allSettled(promises) {
+  return new Promise((resolve) => {
+    let result = [/* {status: ,value: } */], count = 0;
+
+    promises.forEach((promise, index) => {
+      Promise.resolve(promise).then((res) => {
+        result[index] = {status: 'fulfilled', value: res}
+        ++count === promises.length && resolve(result)
+      }, (reason) => {
+        result[index] = {status: 'rejected', reason}
+        ++count === promises.length && resolve(result)
+      })
+    })
+  })
+}
+// 状态改变后就resolve()
+MyPromise.race = function race(promises) {
+  return new Promise(((resolve, reject) => {
+    promises.forEach(promise => {
+      Promise.resolve(promise).then(res => resolve(res), err => reject(err))
+    })
+  }))
+}
+// 状态变为 fulfilled 时resolve(),都是失败了就reject一个异常
+MyPromise.any = function(promises) {
+  let count = 0;
+  return new Promise(((resolve, reject) => {
+    promises.forEach(promise => {
+      Promise.resolve(promise).then(res => resolve(res), err => {
+        if (++count === promises.length)
+          reject(new Error('All promises were rejected'))
+      })
+    })
+  }))
+}
+
+// ==Promise串行执行==
+/**
+ *
+ * @param {Array} argArr  promiseCreator需要的参数数组
+ * @param {(...args)=>Promise} promiseCreator Promise一旦被创建就开始执行，所以要一个创建Promise的函数
+ */
+MyPromise.serial = function(argArr, promiseCreator) {
+  argArr.reduce((prev, arg) => {
+    // 创建每个promise，当then传入的回调所返回的Promise FULFILLED时，下一个promise的回调才执行
+    return prev.then(() => promiseCreator(arg))
+  }, Promise.resolve())
+}
+
+MyPromise.serial1 = async function(argArr, promiseCreator) {
+  for (const arg of argArr) {
+    await promiseCreator(arg)
+  }
+}
+
+// ==TEST== https://juejin.cn/post/6844903801296519182
+MyPromise.serial([2, 3, 4], function createPromise(time) {
+  return new Promise(((resolve, reject) => {
+    setTimeout(() => {
+      console.log('execute after delay:', time)
+      resolve()
+    }, time * 1000)
+  }))
+})
+
+// 用于 Promise A+ 测试
 MyPromise.deferred = function() {
   const result = {};
   result.promise = new MyPromise(function(resolve, reject) {

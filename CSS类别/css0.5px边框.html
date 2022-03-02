@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>css移动端0.5px边框</title>
   <!-- 还可以通过控制viewport，如iphone 6竖屏的宽度为750px，它的dpr=2，用2px表示1px, 设置0.5后进行缩小 -->
   <!-- width是可视窗口宽度，可以类比成 放大镜大小，scale就是放大镜倍率-->
   <meta name="viewport" content="width=device-width,initial-sacle=0.5">
@@ -16,28 +16,23 @@
     }
 
     /* 插入伪元素，采用绝对定位，宽高设置两倍，然后再缩放0.5，更改缩放中心为右上角 */
-    .box.box1::after {
+    .box1::after {
       content: '';
       position: absolute;
       border: 1px solid #000;
       width: 200%;
       height: 200%;
       transform: scale(0.5);
-      transform-origin: left top;
+      transform-origin: 0 0; /* left top */
     }
 
-    .box.box2 {
+    .box2 {
       border: 1px solid #000;
     }
   </style>
 </head>
 <body>
-<div class="box box1" id="px05">
-
-</div>
+<div class="box box1"></div>
 <div class="box box2"></div>
-<script>
-  const box = document.querySelector('#px05')
-</script>
 </body>
 </html>

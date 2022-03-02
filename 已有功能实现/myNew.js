@@ -1,7 +1,7 @@
 function _new(constructor, ...args) {
-  let obj = {}      // 创建空对象
+  const obj = {}      // 创建空对象
 
-  obj.__proto__ = constructor.prototype  // 链接到原型 可以和上一步简化成Object Object.create(constructor)
+  obj.__proto__ = constructor.prototype  // 链接到原型 可以和上一步简化成 obj = Object.create(constructor)
 
   const result = constructor.call(obj, ...args)  // 绑定this执行构造函数
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>css实现正三角形/等边三角形</title>
   <style>
-    .box1 {
+    .box1 { /* 等腰三角形，高为边框数值*/
       width: 0;
       border: 100px solid transparent;
       border-top: 0;
@@ -12,15 +12,14 @@
     }
 
     .box2 {
-      /* 等腰三角形的边长 */
+      /* 等边三角形的边长 */
       ---triangle-side: 100px;
       width: 0;
-      /* 两边的border高度50px让三角形边长为100px，且等边三角形高是边长的√3/2倍*/
+      /* 两边的border高度50px让三角形底边长为100px，且等边三角形高(border-bottom)是边长的√3/2倍*/
       border-left: var(---triangle-side) solid transparent;
       border-right: var(---triangle-side) solid transparent;
       border-bottom: calc(var(---triangle-side) * 1.732) solid palegreen;
     }
-
   </style>
 </head>
 <body>

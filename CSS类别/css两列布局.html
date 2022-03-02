@@ -13,7 +13,7 @@
     }
 
     .center {
-      border: 2px solid red;
+      border: 3px solid red;
       background-color: aqua;
 
       overflow: auto; /* 创建BFC */
@@ -29,15 +29,34 @@
   </style>
 </head>
 <body>
-<div class="left">
-  left
+<div>
+  <div class="left">
+    left
+  </div>
+  <div class="right">
+    right
+  </div>
+  <div class="center">
+    center#基于BFC
+  </div>
 </div>
-<div class="right">
-  right
+<div style="display: flex">
+  <div style="width: 100px">left</div>
+  <div style="flex-grow: 1;background: aqua">center#基于flex-grow:1</div>
+  <div style="width: 100px">right</div>
 </div>
-<div class="center">
-  center
+<div style="display: grid;grid-template-columns: 100px 1fr 100px">
+  <div>left</div>
+  <div style="background: aqua">center#基于grid-template-columns</div>
+  <div>right</div>
 </div>
-<!--TODO 多种实现方式-->
+补充：
+<ul>
+  <li>float + margin-[left/right]</li>
+</ul>
+<div class="aside"></div>
+<div class="main">
+  <div class="content"></div>
+</div>
 </body>
 </html>
