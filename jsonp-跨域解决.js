@@ -1,9 +1,9 @@
-function jsonp(url, params, callback = null) {
+function jsonp(url, params, cbName = null) {
   // 函数调用计数，每次调用该函数时自增，用于避免回调函数重名
-  const cb_count = jsonp.cnt = (jsonp.cnt | 0) + 1
-  const callbackName = callback || ('cb_' + cb_count)
+  const cbCount = jsonp.cnt = (jsonp.cnt | 0) + 1
+  const callbackName = cbName || ('cb_' + cbCount)
 
-  // 拼接请求参数
+  // 拼接请求参数 先是判断是否已有查询参数，后添加回调函数名作为参数
   let querystring = (url.indexOf('?') > 0 ? '&' : '?') +
     (`callback=${callbackName}`)
   Object.entries(params || {}).
@@ -29,8 +29,8 @@ xhr.setRequestHeader('Content-type', 'application/json');
 xhr.send(JSON.stringify({a: 1, b: 2}));
 xhr.onreadystatechange = function() {
   if (xhr.status === 200 && xhr.readyState === 4) {
-    let result = xhr.responseText;//获取到结果
-    alert(result); // promise化时，调用resolve()
+    const result = xhr.responseText;//获取到结果
+    alert(result);
   }
 }
 

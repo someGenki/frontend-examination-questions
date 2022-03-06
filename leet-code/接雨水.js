@@ -1,5 +1,6 @@
 /**
  * 动态规划：每根柱子能接到的水取决于两侧最高柱子中的最小值减去该柱子的高度 (即短板+高度差)
+ * https://leetcode-cn.com/problems/trapping-rain-water/
  * @param {number[]} height
  * @return {number}
  */

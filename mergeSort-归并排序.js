@@ -2,9 +2,9 @@
 function mergeSort(arr) {
   if (arr.length < 2) return arr
   const mid = Math.floor(arr.length / 2)
-  const left = mergeSort(arr.slice(0, mid))
-  const right = mergeSort(arr.slice(mid))
-  return merge(left, right)
+  const leftArr = mergeSort(arr.slice(0, mid))
+  const rightArr = mergeSort(arr.slice(mid, -1))
+  return _merge(leftArr, rightArr)
 }
 
 // 核心：合并两个有序数组
@@ -19,6 +19,18 @@ function merge(left, right) {
     ? res.push(...left.slice(leftIndex))
     : res.push(...right.slice(rightIndex))
   return res;
+}
+
+// 89 https://leetcode-cn.com/problems/merge-sorted-array/
+function _merge(left, right, m = left.length, n = right.length) {
+  let last = n + m
+  while (n > 0) {
+    if (right[n - 1] >= left[m - 1] || m === 0)
+      left[--last] = right[--n]
+    else
+      left[--last] = left[--m]
+  }
+  return left
 }
 
 // 插入排序:有序序列的尾部开始，向前找到第一个出现比他小的值，腾个空间给他，后面比他大的值都要后移

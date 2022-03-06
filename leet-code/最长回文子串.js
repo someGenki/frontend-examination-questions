@@ -27,6 +27,7 @@ function longestPalindrome(s) {
   if (s.length < 2) return s
   let begin = 0, max = 1, len = s.length
 
+  // 从left-right开始扩散后，left=最左边的值，max=长度
   function centerExpand(left, right) {
     while (left >= 0 && right < len && s[left] === s[right]) {
       if (right - left + 1 > max) {

@@ -9,7 +9,7 @@ function debounce(fn, delay = 1000) {
     }, delay);
   };
 }
-
+let useRef,useCallback
 // React Hooks结合debounce, https://codesandbox.io/s/react-hooks-with-debounce-cge7x?file=/src/App.js
 function useDebounce(fn, delay = 1000, dep = []) {
   // useRef实现了React组件的缓存机制

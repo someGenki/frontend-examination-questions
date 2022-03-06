@@ -11,7 +11,7 @@ module.exports = {
   },
   // 产生随机长度，随机内容的数组
   randomArray(size, range = 50) {
-    const randomNum = (range) => Math.floor(Math.random() * range)
+    const randomNum = (range) => Math.floor(Math.random() * range) // maybe appear zero-value
     return Array.from(Array(size || randomNum(50)), _ => randomNum(range))
   },
 

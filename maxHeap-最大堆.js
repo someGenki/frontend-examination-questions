@@ -8,14 +8,14 @@ class Heap {
 
   add(value) { // O(logK) 插入节点值: 放入数组末尾并上浮到合适位置
     this.heap.push(value);
-    this.shiftUp(this.heap.length - 1)
+    this['shiftUp'](this.heap.length - 1)
   }
 
   pop() { // O(logK) 提取最大值/堆顶: 提取 heap[0] 并用 heap[-1] 进行代替，然后从顶部开始下沉
     const max = this.heap[0]
     this.swap(0, this.size() - 1)
     this.heap.pop()
-    this.shiftDown(0);
+    this['shiftDown'](0);
     return max;
   }
 
@@ -118,6 +118,6 @@ var findKthLargest = function(nums, k) {
   });
   return h.peek();
 };
-console.log(findKthLargest([3, 2, 1, 5, 6, 4], 2))
+console.log(findKthLargest([3, 2, 1, 5, 6, 4], 2)) // 5
 
 

@@ -1,12 +1,13 @@
 var lengthOfLIS = function(nums) {
-  let len = nums.length, max = 1, dp = Array(len).fill(1);
+  let len = nums.length, max = 1
+  const dp = Array(len).fill(1); // dp[i]代表nums 以 nums[i] 结尾的最长子序列长度
   for (let i = 1; i < len; ++i) {
     for (let j = 0; j < i; ++j) {
-      if (nums[i] > nums[j] && (dp[j] + 1) > dp[i])
+      if (nums[j] <= nums[i] && (dp[j] + 1) > dp[i])
         dp[i] = dp[j] + 1 // 递增，且dp[j]+1大于当前dp[i]，则更新dp[i]
     }
     if (dp[i] > max)
-      max = dp[i]
+      max = dp[i] // 更新最大值
   }
   return max
 };
@@ -23,15 +24,16 @@ let test1 = [10, 9, 2, 5, 3, 7, 101, 18] // 4
  * 第五步插入 2 d=[0,2,12]。
  */
 function _lengthOfLIS(nums) {
-  // arr[]表示长度为i的最长上升子序列的末尾元素的最小值，max记录目前上升子序列的长度
-  let arr = [], max = 0;
-  for (let num of nums) {
+  const arr = [] // arr表示长度为i的最长上升子序列的末尾元素的最小值
+  let max = 0;//max记录目前上升子序列的长度
+  for (const num of nums) {
     let left = 0, right = max
     while (left < right) {
-      const mid = (left + right) >> 1 // 二分查找，找到第一个比num小的数arr[k],并更新arr[k+1]=num
+      // 二分查找，找到第一个比num小的数arr[k],并更新arr[k+1]=num
+      const mid = (left + right) >> 1
       arr[mid] < num ? (left = mid + 1) : (right = mid)
     }
-    if (right === max) ++max //  num>arr中每个值！
+    if (right === max) ++max //  num>arr中每个值！直接扩张1
     arr[left] = num  // [1,3,5] 要放入 4，left就是索引为2的位置  放入后 => [1,3,4]
   }
   console.log(arr) // [ 2, 3, 7, 18 ]

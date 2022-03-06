@@ -20,7 +20,6 @@ var letterCombinations = function(digits) {
   const dfs = (start, path) => {
     if (start >= len) return res.push(path)
     const str = map.get(digits[start])
-    console.log(str)
     for (let i = 0; i < str.length; i++) {
       dfs(start + 1, path + str[i])
     }

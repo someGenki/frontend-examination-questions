@@ -156,7 +156,7 @@ function resolvePromise(promise, x, resolve, reject) {
 MyPromise.all = function all(promises) {
   return new Promise((resolve, reject) => {
     let result = [], count = 0;
-
+    if(promises.length===0) return resolve(result)
     promises.forEach((promise, index) => {
       Promise.resolve(promise).then(res => {
         result[index] = res

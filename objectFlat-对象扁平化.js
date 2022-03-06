@@ -8,7 +8,7 @@ function objectFlat(obj, result = {}) {
       // 拼接key，数组的索引用 [] 替换 .
       let ckey = pkey +
         (Array.isArray(target) ? `[${k}]` : `${pkey && '.'}${k}`)
-      // 是对象就继续递归处理，不是对象则作为result对象的属性
+      // 是对象就继续递归处理，不是对象则添加为result的属性
       isObject(v) ? traverse(v, ckey) : (result[ckey] = v)
     })
   })(obj)

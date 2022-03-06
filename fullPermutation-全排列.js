@@ -2,23 +2,22 @@
 // 如果能够解决n-1个元素的全排列，就可以解决n个元素的全排列
 function perm(arr, start = 0) {
   if (start === arr.length - 1) {
-    let str = arr.join('')
-    !set.has(str) && set.add(str) // 利用set数据结构去重
+    const str = arr.join('')
+    !set.has(str) && set.add(str)
   }
-  for (let i = start; i <= arr.length - 1; i++) {
+  for (let i = start; i < arr.length; i++) {
     swap(arr, i, start) // 遍历集合 让每个元素都有机会到start位置
     perm(arr, start + 1) // 更小规模 start位置被调换走了，所以后面不会出现
     swap(arr, i, start) // 要换回来/回溯
   }
 }
 
-function swap(arr, i, j) {
-  let temp = arr[i];
+function swap(arr, i, j, temp = arr[i]) {
   arr[i] = arr[j]
   arr[j] = temp
 }
 
-// 只适用于没有重复的值(需去重)
+// 只适用于没有重复的值(需去重) abc √ abb ×
 function permute(arr, res = []) {
   const backtrack = (path) => {
     // 回溯的终点，记录path并结束递归
@@ -33,11 +32,10 @@ function permute(arr, res = []) {
 // https://juejin.cn/post/6844904191379374087
 function combine(chunks, res = []) {
   const helper = (start, path) => {
-    const chunk = chunks[start]
-    chunk.forEach(val => {
-      const cur = path.concat(val)
-      start === chunks.length - 1 ? res.push(cur) : helper(start + 1, cur)
-    })
+    if (start === chunks.length)
+      return res.push(path)
+    for (const prop of chunks[start])
+      helper(start + 1, path.concat(prop))
   }
   helper(0, [])
   return res
@@ -46,9 +44,11 @@ function combine(chunks, res = []) {
 // https://leetcode-cn.com/problems/combinations/
 function combineNK(n, k, res = []) {
   const helper = (start, path) => {
-    if (path.length === k) return res.push(path) // 路径终点
+    if (path.length === k)
+      return res.push(path) // 路径终点则加入结果
     for (let i = start; i <= n; i++) {
-      if (n - i + 1 < k - path.length) continue // 剪枝 452ms -> 104ms
+      if (n - i + 1 < k - path.length)
+        continue // 剪枝 452ms -> 104ms
       helper(i + 1, path.concat(i))
     }
   }

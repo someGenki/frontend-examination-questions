@@ -1,9 +1,8 @@
 const hasCircle = (originObj) => {
-  let map = new WeakMap()
-  let rs = false
+  let map = new WeakMap(),rs = false
   const isLoop = (obj) => {
     Object.values(obj).forEach(val => {
-      if (val && typeof val === 'object')
+      if (val!==null && typeof val === 'object')
         map.has(val) ? (rs = true) : (map.set(val, true) && isLoop(val))
     })
   }

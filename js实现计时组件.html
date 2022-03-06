@@ -50,10 +50,10 @@
     const leftTime = (endTime.getTime() - Date.now());  // 计算结束时间 (毫秒)
     const time = (leftTime > 0 ? leftTime : 0)          // 避免出现负数倒计时
     container.innerText = convertTuple.map((v) => countFn(time, v)).join('')
-    if (leftTime < 1 && callback)
-      callback() // 倒计时结束，调用回调函数，并停止定时器
+    if (leftTime < 1)
+      callback && callback() // 倒计时结束，调用回调函数，且不继续创建定时器
     else
-      setTimeout(() => showCountDown(endTime, container, interval, callback), interval)
+      setTimeout(() => showCountDown(endTime, container, callback, interval), interval)
   }
 
   showCountDown(new Date(Date.now() + 3600000), document.getElementById('countDown'), () => console.log('end!'))
