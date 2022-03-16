@@ -6,9 +6,9 @@ function perm(arr, start = 0) {
     !set.has(str) && set.add(str)
   }
   for (let i = start; i < arr.length; i++) {
-    swap(arr, i, start) // 遍历集合 让每个元素都有机会到start位置
+    swap(arr, i, start) // 遍历集合 让每个元素都有机会到start位置 [做出选择]
     perm(arr, start + 1) // 更小规模 start位置被调换走了，所以后面不会出现
-    swap(arr, i, start) // 要换回来/回溯
+    swap(arr, i, start) // 要换回来/回溯    [撤销选择]
   }
 }
 

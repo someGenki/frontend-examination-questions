@@ -10,7 +10,7 @@
 const PENDING = 'pending';      // 待定
 const FULFILLED = 'fulfilled';  // 成功
 const REJECTED = 'rejected';    // 失败
-
+// @formatter:off 禁止IDEA格式化
 class MyPromise {
   status = PENDING;   // 初始状态
   value = null;       // 成功的返回值
@@ -56,7 +56,7 @@ class MyPromise {
       const createFnPushTaskToMicrotask = (state) => () => {
         queueMicrotask(() => {
           try {
-            const x = (state === FULFILLED)
+            const x = (state === FULFILLED) // 当前promise(非newPromise)的状态判断
               ? realOnFulfilled(this.value)
               : realOnRejected(this.reason);
             resolvePromise(newPromise, x, resolve, reject); // 对于x是非thenable，可以直接调用resolve(x)
@@ -169,7 +169,7 @@ MyPromise.all = function all(promises) {
 // 都注册回调，count为length时resolve()
 MyPromise.allSettled = function allSettled(promises) {
   return new Promise((resolve) => {
-    let result = [/* {status: ,value: } */], count = 0;
+    let result = [/* {status, value} */], count = 0;
 
     promises.forEach((promise, index) => {
       Promise.resolve(promise).then((res) => {
@@ -190,7 +190,7 @@ MyPromise.race = function race(promises) {
     })
   }))
 }
-// 状态变为 fulfilled 时resolve(),都是失败了就reject一个异常
+// 状态变为 fulfilled 时resolve(),都失败了就reject一个异常
 MyPromise.any = function(promises) {
   let count = 0;
   return new Promise(((resolve, reject) => {
@@ -202,6 +202,8 @@ MyPromise.any = function(promises) {
     })
   }))
 }
+// TODO 控制 promises 并发执行
+MyPromise.map=function(){}
 
 // ==Promise串行执行==
 /**
@@ -231,6 +233,7 @@ MyPromise.serial([2, 3, 4], function createPromise(time) {
     }, time * 1000)
   }))
 })
+
 
 // 用于 Promise A+ 测试
 MyPromise.deferred = function() {

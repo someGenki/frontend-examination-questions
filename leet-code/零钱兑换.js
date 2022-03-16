@@ -1,4 +1,5 @@
 /**
+ * https://leetcode-cn.com/problems/coin-change/
  * @param {number[]} coins
  * @param {number} amount
  * @return {number}
@@ -17,3 +18,22 @@ var coinChange = function(coins, amount) {
 
 let a = coinChange([1, 2, 5], 11)
 console.log(a)
+
+// 自顶向下 + 备忘录
+coinChange = function(coins, amount) {
+  const memo = Array(amount + 1).fill(Infinity)
+  const dp = (money) => {
+    if (money === 0) return 0
+    if (money < 0) return -1
+    if (memo[money] !== Infinity) return memo[money]
+    let res = Infinity
+    for (let coin of coins) {
+      const sub = dp(money - coin);// 计算子问题
+      if (sub === -1) continue;
+      res = Math.min(res, sub + 1)
+    }
+    memo[money] = res === Infinity ? -1 : res;// 存入备忘录
+    return memo[money]
+  }
+  return dp(amount)
+}
