@@ -6,11 +6,11 @@
  * queueMicrotask: 接受一个函数，将其加入微任务队列。来自谷歌的提案，现以成为标准(2018)
  * queueMicrotask(fn) 等价于代码 Promise.resolve().then(fn)
  */
-
-const PENDING = 'pending';      // 待定
-const FULFILLED = 'fulfilled';  // 成功
-const REJECTED = 'rejected';    // 失败
 // @formatter:off 禁止IDEA格式化
+const PENDING   = 'pending';      // 待定
+const FULFILLED = 'fulfilled';    // 成功
+const REJECTED  = 'rejected';     // 失败
+
 class MyPromise {
   status = PENDING;   // 初始状态
   value = null;       // 成功的返回值
@@ -34,7 +34,6 @@ class MyPromise {
     this.resolveQueue.forEach(fn => fn()) // 清空队列
   }
 
-  // 同上面的resolve，改变自身状态并清空队列。
   reject = (reason) => {
     if (this.status !== PENDING) return;
     this.status = REJECTED;
@@ -42,28 +41,25 @@ class MyPromise {
     this.rejectQueue.forEach(fn => fn()) // 清空队列
   }
 
-  // Promise链式调用的核心
+  // Promise链式调用的核心，入参的必须都是函数，如果不是就包装成函数
   then(onFulfilled, onRejected) {
-    // 入参的必须都是函数，如果不是就造个函数
-    const realOnFulfilled = (typeof onFulfilled === 'function')
+    onFulfilled = (typeof onFulfilled === 'function')
       ? onFulfilled : value => value;
-    const realOnRejected = (typeof onRejected === 'function')
-      ? onRejected : reason => {throw  reason };
-
-    // ★then每次都会返回一个新的Promise对象
+    onRejected = (typeof onRejected === 'function')
+      ? onRejected : reason => { throw reason };
+    // ★ then每次都会返回一个新的Promise对象
     const newPromise = new MyPromise((resolve, reject) => {
-      // ★返回一个函数，该函数作用是将不同的任务推入微任务队列，其根据state，执行不同回调函数
+      // ★返回一个匿名箭头函数,匿名箭头函数作用是将不同的任务推入微任务队列
+      // 其根据state参数，执行不同then的回调函数，并调用resolvePromise方法
       const createFnPushTaskToMicrotask = (state) => () => {
-        queueMicrotask(() => {
+        const task = () => {
           try {
-            const x = (state === FULFILLED) // 当前promise(非newPromise)的状态判断
-              ? realOnFulfilled(this.value)
-              : realOnRejected(this.reason);
+            const x = (state === FULFILLED)
+              ? onFulfilled(this.value) : onRejected(this.reason);
             resolvePromise(newPromise, x, resolve, reject); // 对于x是非thenable，可以直接调用resolve(x)
-          } catch (error) {
-            reject(error)
-          }
-        })
+          } catch (error) { reject(error) }
+        }
+        queueMicrotask(task)
       }
       // 如果当前promise“pending"则创建一个函数，用于把任务加入微任务队列。将该函数加入回调队列中
       // 否则如果状态以改变，跳过加入回调队列的步骤，直接创建任务，将其推入微任务队列。
