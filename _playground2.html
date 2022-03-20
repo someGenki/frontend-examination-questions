@@ -1,44 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <style>
-    #box {
-      height: 500px;
-      width: 1300px;
-      background-color: cornflowerblue;
-      float: right;
-    }
-
-    .father {
-      border: solid 1px pink;
-    }
-
-    .son1 {
-      width: 200px;
-      height: 200px;
-      background-color: powderblue;
-      float: left;
-    }
-
-    .son2 {
-
-      clear: both;
-
-    }
-  </style>
 </head>
-
 <body>
-<div class="father">
-  <div class="son1"></div>
-  <div class="son2">2</div>
-  <div class="son3"></div>
-</div>
-</body>
+<div id="test">11111</div>
+<script>
+  // 选择需要观察变动的节点
+  const targetNode = document.getElementById('test');
 
+  // 观察器的配置（需要观察什么变动）
+  const config = { attributes: true, childList: true, subtree: true };
+
+  // 当观察到变动时执行的回调函数
+  const callback = function(mutationsList, observer) {
+    console.log(1)
+  };
+
+  // 创建一个观察器实例并传入回调函数
+  const observer = new MutationObserver(callback);
+
+  // 以上述配置开始观察目标节点
+  observer.observe(targetNode, config);
+
+  targetNode.onclick=function(){
+    targetNode.className="1"
+    targetNode.className="2"
+    targetNode.style.height='100px'
+  }
+
+</script>
+
+</body>
 </html>

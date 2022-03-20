@@ -1,14 +1,12 @@
-function indexOf(str, val) {
-  var strLen = str.length, valLen = val.length
-  for (var i = 0; i < strLen; i++) {
-    var matchLen = i + valLen
-    var matchStr = str.slice(i, matchLen)
-    if (matchLen > strLen) {
-      return -1
-    }
-    if (matchStr === val) {
-      return i
-    }
+const path = 'C:/Users/hejiyuan/Desktop/vue-admin/node_modules/@element-plus/icons/es/Rank.js'
+const reg = /\/node_modules\/([^/]+)\//
+
+console.log(reg.test(path))
+
+function test(str) {
+  if(reg.test(str)){
+    console.log(`!${RegExp.$1}!`)
   }
-  return -1
 }
+
+test(path)
