@@ -3,8 +3,8 @@ function _reverseList(head) {
   while (cur !== null) {
     next = cur.next
     cur.next = prev // 因为要翻转，所以把当前next指向上一个
-    prev = cur // 当前节点变成上一个
-    cur = next // 往后继续遍历
+    prev = cur // forward 当前节点变成上一个
+    cur = next // forward 往后继续遍历
   }
   return prev
 }

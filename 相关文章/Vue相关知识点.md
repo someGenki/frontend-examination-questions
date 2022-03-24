@@ -38,21 +38,22 @@
 
 ## Vue渲染流程
 
-★从Vue.createApp()，传入根组件rootComponent,，调用mount()开始。
+★从Vue.createApp()，传入根组件`rootComponent`，调用`mount()`开始。
 
-1. 创建渲染器、创建appContext、app实例、重写mount方法、最后调用mount方法挂载到容器上
+1. 创建渲染器、创建appContext、app实例、重写mount方法
 
    启动入口：createApp() 位于 `packages/runtime-dom/src/index.ts`下，该方法首先调用`ensureRenderer()`创建属于DOM的渲染器后，调用渲染器返回的`createApp()`来创建app实例 
 
    > `const app = ensureRenderer().createApp(...args)`
    >
-   > ensureRenderer 核心调用方法是`createRenderer()`！patch mount  update 等都在此方法内被定义，最后调用`createAppAPI()`创建**createApp**方法并返回
+   > ensureRenderer 核心调用方法是`createRenderer()`！patch mount  update 等都在此方法内被定义。最后调用`createAppAPI()`创建**createApp**方法并返回它
 
 2. 当调用app.mount()进行挂载时，先初始化容器，然后使用根组件创建**vnode**，最后调用**patch**()将 **vnode** **挂载**(patch方法在渲染器renderer创建`createRenderer()`时被定义)。
 
-3. 挂载组件的工作: **创建组件实例**(`createComponentInstance`)，**初始化实例**(`setupComponent(instance)`)，和**初始化渲染副作用**执行(`setupRenderEffect`)
+3. 挂载组件的工作: 从mountComponent方法开始，先**创建组件实例**(`createComponentInstance`)，**初始化实例**(`setupComponent(instance)`)，和**初始化渲染副作用**执行(`setupRenderEffect`)
+   1. 创建实例: 创建appContext和instance 然后返回instance
    1. 初始化实例: 初始化props和slots以及调用**setup()**和**render**方法的挂载(`finishComponentSetup`)
-   2. 副作用执行: 创建组件更新函数(`componentUpdateFn`),并用Effet包裹用于收集依赖，该函数在挂载阶段(mount)将调用相关生命周期钩子，并通过执行`renderComponentRoot()`调用**render**方法获取基于当前实例的VNode Tree，并将VNode Tree进行patch到容器中。
+   2. 渲染副作用执行: 创建组件更新函数(`componentUpdateFn`),并用Effect包裹用于收集依赖，该函数在挂载阶段(mount)将调用相关生命周期钩子，并通过执行`renderComponentRoot()`调用**render**方法获取基于当前实例的VNode Tree，并将VNode Tree进行patch到容器中。
 
 ----
 
@@ -62,9 +63,9 @@
 
 ## Vue更新流程
 
-当数据修改触发trigger时，会把`componentUpdateFn`（用于执行生命周期钩子以及**patch**的effect函数）选择合适的位置并加入任务队列中，并在微任务中清空任务队列，这也就是批量更新 (`packages/runtime-core/src/scheduler.ts`)。
+当数据修改触发trigger时，会把`componentUpdateFn`（用于执行生命周期钩子以及rerender并**patch**的effect函数）选择合适的位置并加入任务队列中，并在微任务中清空任务队列，这也就是批量更新 (`packages/runtime-core/src/scheduler.ts`)。
 
-componentUpdateFn - update: 以compA为例
+componentUpdateFn - update: 以compA为例，A中的数据变化触发trigger
 
 1. 调用comA实例上的render方法生成新vnode tree
 2. 组件类型调用createVNode一般不传children(?)，所以在patch时，不比较children，其实例上的subTree(chilren)由mount时调用render创建并挂载。所以当子组件的状态(state&prop)变化时才调用子组件的render进行patch。prop会在patch时重写赋值(patch props 待定...)
@@ -76,23 +77,25 @@ TODO https://blog.csdn.net/newway007/article/details/115867148
 
 ## Vue生命周期
 
-vue实例从创建到销毁的过程成为vue的**生命周期**。期间经历vue实例的创建、初始化数据、编译模板、挂载DOM、更新、卸载等一些列阶段，在这些阶段会调用特定生命周期钩子。大体可以分为四个主要阶段，分别是**创建组件实例**阶段：先在组件实例创建前调用beforeCreate钩子、这时候数据都未初始化，当创建好实例后，会调用created钩子，此时组件实例相关属性可以被访问到（vue3新出setup方法和模板的编译是在这俩钩子调用前先执行，然后通过setupRenderEffect方法调用后续钩子），然后是**创建DOM**阶段，先调用beforeMount钩子，然后处理子树，等子树挂载完成后再调用mount钩子。这时候可以操作DOM节点。当数据更新，render被重新调用时，会先调用beforeUpdate钩子，然后再调用updated。当销毁实例时，会先调用beforeDestory钩子，这时可以移除监听、事件、定时器等首尾工作。销毁后会执行destory钩子。使用keep-alive缓存组件，有actived钩子。
+vue实例从创建到销毁的过程成为vue的**生命周期**。期间经历vue实例的**创建、初始化数据、编译模板、挂载DOM、更新、卸载**等一些列阶段，在这些阶段会调用特定生命周期钩子。大体可以分为四个主要阶段，分别是**创建组件实例**阶段：先在组件实例创建前调用beforeCreate钩子、这时候数据都未初始化，当创建好实例后，会调用created钩子，此时组件实例相关属性可以被访问到（vue3新出setup方法和模板的编译是在这俩钩子调用前先执行，然后通过setupRenderEffect方法调用后续钩子），然后是**创建DOM**阶段，先调用beforeMount钩子，然后处理子树，等子树挂载完成后再调用mount钩子。这时候可以操作DOM节点。当**数据更新**，render被重新调用时，会先调用beforeUpdate钩子，然后再调用updated。当销毁实例时，会先调用beforeDestory钩子，这时可以移除监听、事件、定时器等首尾工作。销毁后会执行destory钩子。使用keep-alive缓存组件，还有actived钩子。
+
+
 
 
 
 ## Vue3新变化
 
-- 新增`Composition API`,可以更好的逻辑复用和代码组织，避免代码分散、vue2中的mixin中带来的属性名冲突、代码来源不清楚等问题。
-- 使用Proxy重构响应式系统，可以监听更多变化，比如删除、添加属性、has、数组下标变化等、懒代理。defineProperty是劫持对象属性，Proxy是代理整个对象。
+- 新增`Composition API`,可以更好的逻辑复用和代码组织，避免代码分散、vue2中的mixin中带来的属性名冲突、代码来源不清楚等问题，导致出错后难以排除。
+- 使用Proxy重构响应式系统，可以监听更多变化，比如删除、添加属性、has、数组下标变化等、懒代理对象。defineProperty是劫持对象属性，Proxy是代理整个对象。
 - DIFF算法使用最长递增子序列优化对比流程，优化diff时间
 - 还有编译时优化、如下
 - 不支持IE11
 
 
 
-## Vue 3编译优化
+## Vue3编译优化
 
-函数缓存: 对事件侦听器缓存起来复用。
+函数缓存: 对事件侦听器缓存起来复用
 
 patchFlag: 生成AST后，通过打**优化标记**，减少VNode属性的全量比较
 
@@ -126,12 +129,14 @@ SFC文件中，style上特有的属性，使得当前css用于当前vue组件，
 
 3. 作用域插槽就是在renderSlot方法添加第三个参数
 
+
+
 ## 指令
 
 1. 在render函数中，会先调用`resolveDirective()`用指令名获取对应指令属性（ 会自动把指令名驼峰化）
 2. 调用`_withDirectives`方法，用于把指令属性添加到 `VNode` 对象上
 3. 在组件的生命周期会调用`invokeDirectiveHook()`方法来调用指令上已注册的钩子
-4. 对于 `v-if` 指令，在编译后会通过 `?:` 三目运算符来实现动态创建节点的功能。
+4. 对于 `v-if` 指令，在编译后会的render方法里通过 `?:` 三目运算符来实现动态创建节点的功能。
 5. 对于`v-show`指令，则是内部指令，涉及4个钩子：`beforeMount`、`mounted`、`updated` 和 `beforeUnmount`
 
 
@@ -159,10 +164,23 @@ SFC文件中，style上特有的属性，使得当前css用于当前vue组件，
 
 
 
+````js
+// 父组件使用v-model="val时，实际是 :modelValue='val' @update:modelValue="$event => (val = $event)"
+// 所以子组件定义v-model是，可以使用computed实现set时通知父组件修改
+const value = computed({
+    get: () => props.modelValue,
+    set: (val) => emit('update:modelValue', val),
+})
+````
+
+
+
+
+
 ## 事件
 
 1. 在创建组件实例时，创建emit属性` instance.emit = emit.bind(null, instance)`
-2. emit方法源码中，会先将事件名(emit的参数)驼峰化，然后从props对象上获取handler。
+2. emit方法源码中，会先将事件名(emit的参数)**驼峰化**，然后从props对象上获取handler。
    - props的hander是声明组件时由`v-on:xxx`=>`onXxx`添加到props中
 3. 内部最终调用`callWithErrorHandling`方法，配合try catch语句调用fn
 4. 通过`v-on:`绑定的事件都会变成`onXxx`形式，并被emit函数内部进行转换
@@ -275,7 +293,7 @@ PatchFlag：由编译时生成，结合type用于处理不同情况(分而治之
 
 对于**没key**的children，以最短的节点直接patch，判断是新节点数量变长还是变短进行**mount**还是**unmount**
 
-对于有key的children，会用到diff算法，先采用let i对二者顺序遍历，遇到不同时停下来，采用e1 e2双指针从二者末尾开始遍历，遇到不同时停止(相同的直接patch)。
+对于有key的children，会用到diff算法，先采用let i对二者**顺序遍历**，遇到不同时停下来，采用e1 e2双指针从二者末尾**逆序遍历**，遇到不同时停止(相同的直接patch)。
 
 ```js
     /*  c1 老的vnode c2 新的vnode  */
@@ -294,32 +312,48 @@ PatchFlag：由编译时生成，结合type用于处理不同情况(分而治之
 
 ----
 
-1. 从**前**开始找到有相同的节点**patch** ，发现不同，立即跳出
+1. 从**前**开始找到有相同的节点**patch**，发现不同，结束遍历
 
-2. 从**后**开始倒序相同节点**patch**，发现不同，立即跳出
-3. 如果是单纯的新增节点，将剩下的节点mount
-4. 如果是单纯的删除节点，将剩下的节点unmount
-5. 否则如果对于不确定的元素(**未知序列**)，开始遍历老节点
-   1. 基于新节点建立Map(key->index)，寻找与老节点对应新节点的**index**
-   2. 如果新**index**不存在`(newIndex === undefined)`,unmount
-   3. 如果新**index**存在复用（**patch**）并判断节点是否发生移动
+2. 从**后**开始倒序找相同的节点**patch**，发现不同，结束遍历
+
+3. 如果是单纯的新增节点，将剩下的节点**mount**
+
+4. 如果是单纯的删除节点，将剩下的节点**unmount**
+
+5. 否则如果对于不确定的元素(**未知序列**)
+
+   1. 基于新节点建立Map(child.key->index)
+   2. 开始遍历老节点中的剩余节点(未知序列)
+   3. 寻找与老节点对应新节点的**index**
+
+      - 如果**index**不存在(老节点的key不在map)中则**umount**
+
+
+      - 如果**index**存在复用(patch)并判断节点是否发生移动(不是很懂)
+
    4. 如果新节点没有对应老节点`(newIndexToOldIndexMap[i] === 0)`，mount
-   5. 遍历完老节点后，如果发生移动，计算最长递增序列，找出不需要移动的节点，原地复用，减少了移动DOM的开销
+
+6. ★遍历完老节点后，如果发生移动，计算最长递增序列(这个数组来自于遍历老节点是找到**index**时记录的)，找出不需要移动的节点，原地复用，减少了移动DOM的开销
 
 
 
-***为什么要得到最长稳定序列\***
-
-因为我们需要一个序列作为基础的参照序列，其他未在稳定序列的节点，进行移动。
 
 
+**为什么要得到最长稳定序列**
+
+A: 因为我们需要一个序列作为基础的参照序列，其他未在稳定序列的节点，进行移动。
+
+or: 满足此子序列的元素不需要移动，没有满足此子序列的元素移动即可。对应的
+
+> 1 2 3  <> 3 1 2    getSequence: [1,2]  将3移动前面
 
 Vue2在DOM-Diff过程中，优先处理特殊场景的情况，即头头比对，头尾比对，尾头比对等。
 
-而Vue3在DOM-Diff过程中，根据 newIndexToOldIndexMap 新老节点索引列表找到最长稳定序列，通过最长增长子序列的算法比对，找出新旧节点中不需要移动的节点，原地复用，仅对需要移动或已经patch的节点进行操作，最大限度地提升替换效率，相比于Vue2版本是质的提升！
+而Vue3在VNode-Diff过程中，根据 newIndexToOldIndexMap 新老节点索引列表找到最长稳定序列，通过最长增长子序列的算法比对，找出新旧节点中不需要移动的节点，原地复用，仅对需要移动或已经patch的节点进行操作，最大限度地提升替换效率，相比于Vue2版本是质的提升！
 ————————————————
-版权声明：本文为CSDN博主「前端优选」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
 原文链接：https://blog.csdn.net/webyouxuan/article/details/108459889
+
+
 
 
 
@@ -400,6 +434,20 @@ Vue2在DOM-Diff过程中，优先处理特殊场景的情况，即头头比对�
 
 
 
+## Vue3Api
+
+### provide
+
+组件实例默认继承自父组件的`provides`，如果该组件自己使用provide注入值，则创建一个属于自己的provides对象`currentInstance.provides = Object.create(parentProvides)`
+
+### inject
+
+如果有父组件实例，就用父组件实例的provides对象获取值：`return provides[key]`。没有父组件则该组件是根实例，从app.contenxt.provides获取值。属性的查找过程会经历原型链
+
+为什么inject只能在setup或者函数式组件中调用？因为调用inject时，需要使用到`currentInstance`这个全局变量，这个变量只有在创建并初始化时组件实例时指向该组件实例。
+
+
+
 ## Vu3响应式
 
 ### 全局变量
@@ -472,7 +520,7 @@ set value(newValue: T) {
 
 核心**doWatch**方法，该函数返回一个函数用于停止侦听。
 
-内部先判断source类型来创建一个getter(用于收集依赖的副作用函数)，然后创建一个名为job的**调度器任务**。该函数先判断是否该effect是否被停用，然后根据是否有cb来区分watch和watchEffect，是watchEffect则直接执行副作用函数，否则先执行副作用获取最新的值，然后触发cb回调，然后更新oldValue。
+内部先判断source类型来创建一个getter(用于收集依赖的副作用函数)，然后创建一个名为job的**调度器任务**。该函数先判断是否该effect是否被停用，然后根据是否有cb来区分watch和watchEffect，是watchEffect则直接执行副作用函数，否则先执行副作用(getter)获取最新的值，然后触发cb回调，然后更新oldValue。
 
 ```ts
 const effect = new ReactiveEffect(getter, scheduler)
@@ -480,7 +528,7 @@ const effect = new ReactiveEffect(getter, scheduler)
 
 创建 effect 对象后判断是否要立即执行job还是执行副作用或者加入后置队列
 
-
+(创建Effect时有scheduler，则在effect被触发时，执行schedule而不是原本的方法)
 
 ## Vue的性能优化
 

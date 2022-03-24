@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 /**
  * 快速排序与归并排序一样运用了分治思想:
  * 取数据最后一个作为分割 中轴
@@ -8,26 +10,34 @@
  */
 const qsort = function qsort(nums, low, high) {
   if (low >= high) return;
+  // swap(nums, high, Math.floor(random() * high + 1)) // 不取下标leet code效率低
   const mid = partition(nums, low, high);
   qsort(nums, low, mid - 1);
   qsort(nums, mid + 1, high);
 }
 
+const random = (start, end) => {
+  let r1 = Math.random()    // [0,1)
+  let r2 = r1 * (end - start)   // [0,end - start)
+  return Math.round(r2 + start)     // floor:[start,end) ceil:(start,end] round:[start,end]
+}
+
+const swap = (arr, i, j) => {
+  let tmp = arr[i]
+  arr[i] = arr[j]
+  arr[j] = tmp
+}
+
 function partition(arr, low, high) {
-  const swap = (arr, i, j) => {
-    let tmp = arr[i]
-    arr[i] = arr[j]
-    arr[j] = tmp
-  }
   // 取一个元素作为划分后的中轴。按照中轴来划分，小于中轴的放右边 (大到小排序)
   const pivot = arr[low]
   // low 向右移动，high 向左移动，直到 low 和 high 指向同一元素为止,中轴位置诞生
   while (low < high) {
-    // 将high(数组索引<右侧>)移动到值比中轴值的大时，swap调整位置，让大值出现再中轴左侧
+    // 将high移动到其值比中轴值的大时，swap调整位置，让大值出现再中轴左侧(逆序)
     while (low < high && arr[high] <= pivot) high-- // 先high！
-    swap(arr, low, high)
+    if (low !== high) swap(arr, low, high)
     while (low < high && arr[low] >= pivot) low++
-    swap(arr, low, high)
+    if (low !== high) swap(arr, low, high)
   }
   return low
 }

@@ -11,6 +11,25 @@ function throttle(fn, interval = 1000) {
   }
 }
 
+function _throttle(fn, delay = 200) {
+  let last = null
+  let timer = null
+  return function (...args) {
+    let now = Date.now()
+    // 在时间间隔内，不触发，而且是取消定时器。当函数出发后要记录触发时间
+    if (last && now < last + delay) {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        fn.apply(this, args)
+        last = now
+      }, delay)
+    } else {
+      fn.apply(this, args)
+      last = now
+    }
+  }
+}
+
 // ==TEST==
 const throttlerLog = throttle(console.log, 200);
 throttlerLog(1) // 1

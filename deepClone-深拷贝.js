@@ -10,15 +10,16 @@
  */
 
 
-function deepClone(target, map = new Map()) {
+function deepClone(target, map = new WeakMap()) {
   if (target === null || typeof target !== 'object') return target // 基本类型返回
   if ([Date, RegExp, Set, Map, Function].includes(target.constructor))
     return (new target.constructor(target)) // 特殊类型克隆
   if (map.get(target)) return map.get(target)
-  const newTarget = Object.create(Object.getPrototypeOf(target)) // 继承原型
+  const newTarget = Array.isArray(target) ? [] : {}
   map.set(target, newTarget)
   for (let prop in target) {
-    newTarget[prop] = deepClone(target[prop], map)
+    if (target.hasOwnProperty(prop))
+      newTarget[prop] = deepClone(target[prop], map)
   }
   return newTarget
 }

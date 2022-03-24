@@ -25,7 +25,7 @@ function jsonp(url, params, cbName = null) {
 
 const xhr = new XMLHttpRequest();
 xhr.open('post', 'http://localhost:8080/api/test');
-xhr.setRequestHeader('Content-type', 'application/json');
+xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({a: 1, b: 2}));
 xhr.onreadystatechange = function() {
   if (xhr.status === 200 && xhr.readyState === 4) {

@@ -25,15 +25,15 @@ let test1 = [10, 9, 2, 5, 3, 7, 101, 18] // 4
  */
 function _lengthOfLIS(nums) {
   const arr = [] // arr表示长度为i的最长上升子序列的末尾元素的最小值
-  let max = 0;//max记录目前上升子序列的长度
+  let max = 0  //max记录目前上升子序列的长度
   for (const num of nums) {
     let left = 0, right = max
     while (left < right) {
       // 二分查找，找到第一个比num小的数arr[k],并更新arr[k+1]=num
-      const mid = (left + right) >> 1
+      const mid = Math.floor((left + right) / 2)
       arr[mid] < num ? (left = mid + 1) : (right = mid)
     }
-    if (right === max) ++max //  num>arr中每个值！直接扩张1
+    if (left === max) ++max //  num>arr中每个值！直接扩张1
     arr[left] = num  // [1,3,5] 要放入 4，left就是索引为2的位置  放入后 => [1,3,4]
   }
   console.log(arr) // [ 2, 3, 7, 18 ]

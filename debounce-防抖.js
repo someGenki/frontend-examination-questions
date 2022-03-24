@@ -13,7 +13,7 @@ let useRef,useCallback
 // React Hooks结合debounce, https://codesandbox.io/s/react-hooks-with-debounce-cge7x?file=/src/App.js
 function useDebounce(fn, delay = 1000, dep = []) {
   // useRef实现了React组件的缓存机制
-  const {current} = useRef({fn, timer: null});
+  const { current } = useRef({fn, timer: null});
   return useCallback(function(...args) {
     if (current.timer) clearTimeout(current.timer);
     current.timer = setTimeout(() => current.fn(...args));
